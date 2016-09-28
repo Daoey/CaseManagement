@@ -12,6 +12,6 @@ public interface UserRepository {
     
     User getUserBy(String firstName, String lastName, String username);
     
-    List<User> getUsersFromTeamId(int teamId);
+    List<User> getUsersByTeamId(int teamId);
     
 }
