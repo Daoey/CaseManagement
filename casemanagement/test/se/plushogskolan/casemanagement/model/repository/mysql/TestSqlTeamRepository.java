@@ -11,6 +11,12 @@ import se.plushogskolan.casemanagement.exception.RepositoryException;
 import se.plushogskolan.casemanagement.model.Team;
 import se.plushogskolan.casemanagement.repository.mysql.SqlTeamRepository;
 
+/**
+ * 
+ * @deprecated because not done. Test results must now be checked manually in database
+ *
+ */
+@Deprecated
 public final class TestSqlTeamRepository {
     private String defaultUsername = "Really long username";
     private Team defaultTeam;
@@ -24,6 +30,7 @@ public final class TestSqlTeamRepository {
 
     @Test
     public void testSaveTeam() throws RepositoryException {
+        // TODO assert before and after
         sqlTeamRepository.saveTeam(defaultTeam);
     }
 
@@ -40,19 +47,22 @@ public final class TestSqlTeamRepository {
 
     @Test
     public void testInactivateTeam() throws RepositoryException {
+        // TODO assert before and after
         sqlTeamRepository.inactivateTeam(4);
     }
 
     @Test
     public void testGetAllTeams() throws RepositoryException {
+        // TODO assert before and after
         List<Team> teams = sqlTeamRepository.getAllTeams();
         if (teams.size() < 1) {
             fail();
         }
     }
-    
+
     @Test
     public void testAddUserToTeam() throws RepositoryException {
+        // TODO assert before and after
         sqlTeamRepository.addUserToTeam(2, 1);
     }
 }
