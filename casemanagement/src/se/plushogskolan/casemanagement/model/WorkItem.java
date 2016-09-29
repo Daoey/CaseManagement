@@ -24,7 +24,7 @@ public final class WorkItem {
 
     @Override
     public String toString() {
-        return "[WorkItem id = " + id + ", userId = " + userId + ", description = " + description + ", Status = "
+        return "WorkItem [id = " + id + ", userId = " + userId + ", description = " + description + ", Status = "
                 + status + "]";
     }
 
