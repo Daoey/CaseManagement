@@ -20,7 +20,7 @@ public class TestWorkItem {
 
     @Test
     public void toStringAsExpected() {
-        assertEquals("[id = 2, userId = 10, description = Buy milk, Status = UNSTARTED]", workItem.toString());
+        assertEquals("[WorkItem id = 2, userId = 10, description = Buy milk, Status = UNSTARTED]", workItem.toString());
     }
 
     @Test

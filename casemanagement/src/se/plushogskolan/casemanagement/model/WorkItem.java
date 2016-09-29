@@ -6,7 +6,7 @@ public final class WorkItem {
     private final int userId;
     private final String description;
     private final Status status;
-    
+
     public enum Status {
         UNSTARTED, STARTED, DONE
     }
@@ -24,7 +24,8 @@ public final class WorkItem {
 
     @Override
     public String toString() {
-        return "[id = " + id + ", userId = " + userId + ", description = " + description + ", Status = " + status + "]";
+        return "[WorkItem id = " + id + ", userId = " + userId + ", description = " + description + ", Status = "
+                + status + "]";
     }
 
     @Override
@@ -60,7 +61,7 @@ public final class WorkItem {
     public String getDescription() {
         return description;
     }
-    
+
     public Status getStatus() {
         return status;
     }
