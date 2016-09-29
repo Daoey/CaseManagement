@@ -25,10 +25,11 @@ DROP TABLE IF EXISTS `issue_table`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `issue_table` (
-  `idissue_table` int(10) unsigned NOT NULL,
+  `idissue_table` int(11) NOT NULL AUTO_INCREMENT,
   `description` varchar(45) DEFAULT NULL,
   `idwork_item` int(11) NOT NULL,
   PRIMARY KEY (`idissue_table`),
+  UNIQUE KEY `idissue_table_UNIQUE` (`idissue_table`),
   KEY `fk_issue_work_item_idx` (`idwork_item`),
   CONSTRAINT `fk_issue_work_item` FOREIGN KEY (`idwork_item`) REFERENCES `work_item_table` (`idwork_item_table`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -77,7 +78,7 @@ DROP TABLE IF EXISTS `team_table`;
 CREATE TABLE `team_table` (
   `idteam_table` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
-  `active` bit(1) NOT NULL,
+  `active` tinyint(4) NOT NULL,
   PRIMARY KEY (`idteam_table`),
   UNIQUE KEY `idteam_table_UNIQUE` (`idteam_table`),
   CONSTRAINT `fk_team_user` FOREIGN KEY (`idteam_table`) REFERENCES `user_table` (`idteam`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -101,12 +102,12 @@ DROP TABLE IF EXISTS `user_table`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_table` (
-  `iduser_table` int(11) NOT NULL,
+  `iduser_table` int(11) NOT NULL AUTO_INCREMENT,
   `first_name` varchar(45) DEFAULT NULL,
   `last_name` varchar(45) DEFAULT NULL,
   `username` varchar(45) NOT NULL,
   `active` tinyint(4) NOT NULL,
-  `idteam` int(8) DEFAULT NULL,
+  `idteam` int(11) DEFAULT NULL,
   PRIMARY KEY (`iduser_table`),
   UNIQUE KEY `id_user_UNIQUE` (`iduser_table`),
   UNIQUE KEY `username_UNIQUE` (`username`),
@@ -120,7 +121,6 @@ CREATE TABLE `user_table` (
 
 LOCK TABLES `user_table` WRITE;
 /*!40000 ALTER TABLE `user_table` DISABLE KEYS */;
-INSERT INTO `user_table` VALUES (1,'joakim','landström','joakim',1,0);
 /*!40000 ALTER TABLE `user_table` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -138,8 +138,8 @@ CREATE TABLE `work_item_table` (
   `iduser` int(11) DEFAULT NULL,
   PRIMARY KEY (`idwork_item_table`),
   UNIQUE KEY `idwork_item_table_UNIQUE` (`idwork_item_table`),
-  KEY `fk_work_item_user_idx` (`iduser`),
   KEY `fk_work_item_status_idx` (`idstatus`),
+  KEY `fk_work_item_user_idx` (`iduser`),
   CONSTRAINT `fk_work_item_status` FOREIGN KEY (`idstatus`) REFERENCES `status_table` (`idstatus_table`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_work_item_user` FOREIGN KEY (`iduser`) REFERENCES `user_table` (`iduser_table`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -163,4 +163,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-29 12:03:48
+-- Dump completed on 2016-09-29 12:54:20

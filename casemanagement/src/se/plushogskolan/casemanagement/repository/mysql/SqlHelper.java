@@ -30,7 +30,12 @@ public final class SqlHelper {
     }
 
     public SqlHelper parameter(int parameter) {
-        parameters.add(parameters);
+        parameters.add(parameter);
+        return this;
+    }
+    
+    public SqlHelper parameter(boolean parameter) {
+        parameters.add(parameter);
         return this;
     }
 
