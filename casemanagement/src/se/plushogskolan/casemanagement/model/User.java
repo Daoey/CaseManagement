@@ -46,6 +46,12 @@ public final class User {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", username=" + username + ", teamId=" + teamId + ", isActive=" + isActive
+                + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+    }
+
     public int getId() {
         return id;
     }
