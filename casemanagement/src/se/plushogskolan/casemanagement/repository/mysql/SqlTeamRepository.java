@@ -9,13 +9,12 @@ import se.plushogskolan.casemanagement.model.Team;
 import se.plushogskolan.casemanagement.repository.TeamRepository;
 
 public final class SqlTeamRepository implements TeamRepository {
-    private final String databaseUrl = "jdbc:mysql://localhost:3306/case_db?useSSL=false";
+    private final String databaseUrl = "jdbc:mysql://localhost:3306/case_db?user=root&password=root&useSSL=false";
 
     @Override
     public void saveTeam(Team team) throws RepositoryException {
         SqlHelper helper = new SqlHelper(databaseUrl);
         final String query = "insert into team_table (name, active) values (?, ?);";
-
         try {
             helper.query(query).parameter(team.getName()).parameter(team.isActive()).update();
         } catch (SQLException e) {

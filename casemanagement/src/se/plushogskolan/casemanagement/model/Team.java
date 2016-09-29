@@ -1,13 +1,10 @@
 package se.plushogskolan.casemanagement.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public final class Team {
     // Required
-    private int id;
     private String name;
     // Optional
+    private int id;
     private boolean active;
 
     private Team(int id, boolean active, String name) {
@@ -61,14 +58,18 @@ public final class Team {
     }
 
     public static final class TeamBuilder {
-        // Required
-        private int id;
-        private String name;
         // Optional
+        private int id = 0;
         private boolean active = true;
 
-        public Team build(int id, String name) {
+        public Team build(String name) {
+            // Required name
             return new Team(id, active, name);
+        }
+        
+        public TeamBuilder setId(int id) {
+            this.id = id;
+            return this;
         }
 
         public TeamBuilder setActive(boolean active) {
