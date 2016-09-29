@@ -12,7 +12,7 @@ public final class TestUser {
     private User twinUser1;
     private User twinUser2;
     private User brokenUser;
-    
+
     @Before
     public void setUp() throws Exception {
         twinUser1 = new User.UserBuilder().build(defaultId, defaultUsername);
@@ -20,33 +20,39 @@ public final class TestUser {
     }
 
     @Test
+    public void testUserBuilder() {
+        new User.UserBuilder().setActive(false).setFirstName("Per-Erik").setLastName("Ferb").setTeamId(666)
+                .build(defaultId, defaultUsername);
+    }
+
+    @Test
     public void testUserEquals() {
-        brokenUser =  new User.UserBuilder().build(defaultId, "Another username");
-        
+        brokenUser = new User.UserBuilder().build(defaultId, "Another username");
+
         assertEquals(twinUser1, twinUser2);
-        
+
         assertNotEquals(twinUser1, brokenUser);
     }
 
     @Test
     public void testUserHashCode() {
         int anotherId = 1002;
-        brokenUser =  new User.UserBuilder().build(anotherId, defaultUsername);
-        
+        brokenUser = new User.UserBuilder().build(anotherId, defaultUsername);
+
         assertEquals(twinUser1.hashCode(), twinUser2.hashCode());
-        
+
         assertNotEquals(twinUser1.hashCode(), brokenUser.hashCode());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testUserIdRequirements() {
         int negativeId = -1;
-        brokenUser =  new User.UserBuilder().build(negativeId, defaultUsername);
+        brokenUser = new User.UserBuilder().build(negativeId, defaultUsername);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testUserNameRequirements() {
+    public void testUsernameRequirements() {
         String toShortUsername = "<10char";
-        brokenUser =  new User.UserBuilder().build(defaultId, toShortUsername);
+        brokenUser = new User.UserBuilder().build(defaultId, toShortUsername);
     }
 }

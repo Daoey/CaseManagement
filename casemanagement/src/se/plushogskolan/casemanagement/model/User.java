@@ -90,35 +90,9 @@ public final class User {
             return new User(id, isActive, teamId, username, firstName, lastName);
         }
 
-        public int getId() {
-            return id;
-        }
-
-        public UserBuilder setId(int id) {
-            this.id = id;
-            return this;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public UserBuilder setUsername(String username) {
-            this.username = username;
-            return this;
-        }
-
-        public int getTeamId() {
-            return teamId;
-        }
-
         public UserBuilder setTeamId(int teamId) {
             this.teamId = teamId;
             return this;
-        }
-
-        public boolean isActive() {
-            return isActive;
         }
 
         public UserBuilder setActive(boolean isActive) {
@@ -126,17 +100,9 @@ public final class User {
             return this;
         }
 
-        public String getFirstName() {
-            return firstName;
-        }
-
         public UserBuilder setFirstName(String firstName) {
             this.firstName = firstName;
             return this;
-        }
-
-        public String getLastName() {
-            return lastName;
         }
 
         public UserBuilder setLastName(String lastName) {
