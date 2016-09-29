@@ -46,28 +46,28 @@ public final class TestTeam {
         anotherTeam = new Team.TeamBuilder().build(defaultId, anotherName);
         assertNotEquals(teamTwin1.hashCode(), anotherTeam.hashCode());
     }
-    
+
     @Test
     public void testTeamBuilder() {
         List<User> users = new ArrayList<>();
         users.add(new User.UserBuilder().build(1001, "long username"));
         new Team.TeamBuilder().setActive(false).setUsers(users).build(defaultId, defaultName);
     }
-    
+
     @Test
-    public void testTeamSizeAllowed(){
+    public void testTeamSizeAllowed() {
         List<User> allowedAmountOfUsers = new ArrayList<>();
-        for(int i = 0; i < 10; i++){
-            allowedAmountOfUsers.add(new User.UserBuilder().build(100+i, "long username " + i));
+        for (int i = 0; i < 10; i++) {
+            allowedAmountOfUsers.add(new User.UserBuilder().build(100 + i, "long username " + i));
         }
         new Team.TeamBuilder().setActive(false).setUsers(allowedAmountOfUsers).build(defaultId, defaultName);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
-    public void testTeamSizeRestriction(){
+    public void testTeamSizeRestriction() {
         List<User> toManyUsers = new ArrayList<>();
-        for(int i = 0; i < 11; i++){
-            toManyUsers.add(new User.UserBuilder().build(100+i, "long username " + i));
+        for (int i = 0; i < 11; i++) {
+            toManyUsers.add(new User.UserBuilder().build(100 + i, "long username " + i));
         }
         new Team.TeamBuilder().setActive(false).setUsers(toManyUsers).build(defaultId, defaultName);
     }
