@@ -9,13 +9,11 @@ public final class Team {
     private String name;
     // Optional
     private boolean active;
-    private List<User> users;
 
-    private Team(int id, boolean active, String name, List<User> users) {
+    private Team(int id, boolean active, String name) {
         this.id = id;
         this.active = active;
         this.name = name;
-        this.users = users;
     }
 
     @Override
@@ -47,7 +45,7 @@ public final class Team {
 
     @Override
     public String toString() {
-        return "Team [id=" + id + ", name=" + name + ", active=" + active + ", users=" + users + "]";
+        return "Team [id=" + id + ", name=" + name + ", active=" + active + "]";
     }
 
     public int getId() {
@@ -62,32 +60,19 @@ public final class Team {
         return name;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
     public static final class TeamBuilder {
         // Required
         private int id;
         private String name;
         // Optional
         private boolean active = true;
-        private List<User> users = new ArrayList<>();
 
         public Team build(int id, String name) {
-            return new Team(id, active, name, users);
+            return new Team(id, active, name);
         }
 
         public TeamBuilder setActive(boolean active) {
             this.active = active;
-            return this;
-        }
-
-        public TeamBuilder setUsers(List<User> users) {
-            if (users.size() > 10) {
-                throw new IllegalArgumentException("Teams are not allowed to have more than 10 Users");
-            }
-            this.users = users;
             return this;
         }
     }
