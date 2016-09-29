@@ -13,8 +13,8 @@ public final class SqlTeamRepository implements TeamRepository {
 
     @Override
     public void saveTeam(Team team) throws RepositoryException {
-        SqlHelper helper = new SqlHelper(databaseUrl);
         final String query = "insert into team_table (name, active) values (?, ?);";
+        SqlHelper helper = new SqlHelper(databaseUrl);
         try {
             helper.query(query).parameter(team.getName()).parameter(team.isActive()).update();
         } catch (SQLException e) {
@@ -23,9 +23,15 @@ public final class SqlTeamRepository implements TeamRepository {
     }
 
     @Override
-    public void updateTeam(Team newValues) {
-        // TODO Auto-generated method stub
-
+    public void updateTeam(Team newValues) throws RepositoryException {
+        final String query = "UPDATE team_table SET name = ?, active = ? WHERE idteam_table = ?;";
+        SqlHelper helper = new SqlHelper(databaseUrl);
+        try {
+            helper.query(query).parameter(newValues.getName()).parameter(newValues.isActive())
+                    .parameter(newValues.getId()).update();
+        } catch (SQLException e) {
+            throw new RepositoryException("Could not update team with id: \"" + newValues.getId() + "\"", e);
+        }
     }
 
     @Override

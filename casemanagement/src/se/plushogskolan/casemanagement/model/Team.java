@@ -66,7 +66,7 @@ public final class Team {
             // Required name
             return new Team(id, active, name);
         }
-        
+
         public TeamBuilder setId(int id) {
             this.id = id;
             return this;
