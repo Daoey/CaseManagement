@@ -17,16 +17,6 @@ public final class User {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
-        checkIfValuesIsOk();
-    }
-
-    private void checkIfValuesIsOk() {
-        if (id < 0) {
-            throw new IllegalArgumentException("Invalid id. Only positive numbers is OK.");
-        }
-        if (username.length() < 10) {
-            throw new IllegalArgumentException("Invalid username. Username must be at least 10 characters long.");
-        }
     }
 
     @Override
@@ -40,9 +30,13 @@ public final class User {
 
     @Override
     public boolean equals(Object other) {
-
+        
         if (this == other) {
             return true;
+        }
+        
+        if (null == other) {
+            return false;
         }
 
         if (other instanceof User) {
@@ -87,7 +81,19 @@ public final class User {
         private String lastName = "";
 
         public User build(int id, String username) {
+            this.id = id;
+            this.username = username;
+            checkIfValuesIsOk();
             return new User(id, isActive, teamId, username, firstName, lastName);
+        }
+
+        private void checkIfValuesIsOk() {
+            if (id < 0) {
+                throw new IllegalArgumentException("Invalid id. Only positive numbers is OK.");
+            }
+            if (username.length() < 10) {
+                throw new IllegalArgumentException("Invalid username. Username must be at least 10 characters long.");
+            }
         }
 
         public UserBuilder setTeamId(int teamId) {
