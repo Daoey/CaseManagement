@@ -54,14 +54,19 @@ public final class SqlTeamRepository implements TeamRepository {
         try {
             teams = helper.query(query).many(teamMapper);
         } catch (SQLException e) {
-            throw new RepositoryException("Could get all teams.", e);
+            throw new RepositoryException("Could not get all teams.", e);
         }
         return teams;
     }
 
     @Override
-    public void addUserToTeam(int userId, int teamId) {
-        // TODO Auto-generated method stub
-
+    public void addUserToTeam(int userId, int teamId) throws RepositoryException {
+        final String query = "UPDATE user_table SET idteam = ? WHERE iduser_table = ?;";
+        SqlHelper helper = new SqlHelper(databaseUrl);
+        try {
+            helper.query(query).parameter(teamId).parameter(userId).update();
+        } catch (SQLException e) {
+            throw new RepositoryException("Could not add User \"" + userId + "\" to Team \"" + teamId + "\".", e);
+        }
     }
 }

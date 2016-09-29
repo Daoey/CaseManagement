@@ -50,19 +50,9 @@ public final class TestSqlTeamRepository {
             fail();
         }
     }
-
-    // @Test
-    // public void testSaveAndGetTeam() throws RepositoryException {
-    // sqlTeamRepository.saveTeam(defaultTeam);
-    //
-    // List<Team> teams = sqlTeamRepository.getAllTeams();
-    //
-    // boolean teamFound = false;
-    // for (Team teamFromRepo : teams) {
-    // if (defaultTeam.equals(teamFromRepo)) {
-    // teamFound = true;
-    // }
-    // }
-    // if(!teamFound)fail();
-    // }
+    
+    @Test
+    public void testAddUserToTeam() throws RepositoryException {
+        sqlTeamRepository.addUserToTeam(2, 1);
+    }
 }
