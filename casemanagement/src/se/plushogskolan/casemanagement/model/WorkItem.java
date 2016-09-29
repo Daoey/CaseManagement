@@ -18,8 +18,8 @@ public final class WorkItem {
         this.status = status;
     }
 
-    public static WorkItemBuilder builder(int userId, String description, Status status) {
-        return new WorkItemBuilder(userId, description, status);
+    public static WorkItemBuilder builder() {
+        return new WorkItemBuilder();
     }
 
     @Override
@@ -68,18 +68,32 @@ public final class WorkItem {
 
     public static class WorkItemBuilder {
         private int id = 0;
-        private int userId;
-        private String description;
-        private Status status;
-
-        private WorkItemBuilder(int userId, String description, Status status) {
-            this.userId = userId;
-            this.description = description;
-            this.status = status;
+        private int userId = 0;
+        private String description = "";
+        private Status status = Status.UNSTARTED;
+        
+        //Empty private constructor to hide visibility
+        private WorkItemBuilder() {
+            ;
         }
-
+        
         public WorkItemBuilder setId(int id) {
             this.id = id;
+            return this;
+        }
+        
+        public WorkItemBuilder setUserId(int userId) {
+            this.userId = userId;
+            return this;
+        }
+        
+        public WorkItemBuilder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+        
+        public WorkItemBuilder setStatus(Status status) {
+            this.status = status;
             return this;
         }
 

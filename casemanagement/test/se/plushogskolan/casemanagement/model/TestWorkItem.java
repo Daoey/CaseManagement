@@ -8,15 +8,18 @@ import org.junit.Test;
 import se.plushogskolan.casemanagement.model.WorkItem.Status;
 
 public class TestWorkItem {
-
-    private WorkItem workItem = WorkItem.builder(10, "Buy milk", WorkItem.Status.UNSTARTED).setId(2).build();
-    private WorkItem workItemCopy = WorkItem.builder(10, "Buy milk", WorkItem.Status.UNSTARTED).setId(2).build();
-    private WorkItem workItemDifferentId = WorkItem.builder(10, "Buy milk", WorkItem.Status.UNSTARTED).setId(5).build();
-    private WorkItem workItemDifferentUserId = WorkItem.builder(7, "Buy milk", WorkItem.Status.UNSTARTED).setId(2)
-            .build();
-    private WorkItem workItemDifferentDescription = WorkItem.builder(10, "Buy cereal", WorkItem.Status.UNSTARTED)
-            .setId(2).build();
-    private WorkItem workItemDifferentStatus = WorkItem.builder(10, "Buy milk", WorkItem.Status.DONE).setId(2).build();
+    private WorkItem workItem = WorkItem.builder().setId(2).setUserId(10).setDescription("Buy milk")
+            .setStatus(WorkItem.Status.UNSTARTED).build();
+    private WorkItem workItemCopy = WorkItem.builder().setId(2).setUserId(10).setDescription("Buy milk")
+            .setStatus(WorkItem.Status.UNSTARTED).build();
+    private WorkItem workItemDifferentId = WorkItem.builder().setId(5).setUserId(10).setDescription("Buy milk")
+            .setStatus(WorkItem.Status.UNSTARTED).build();
+    private WorkItem workItemDifferentUserId = WorkItem.builder().setId(2).setUserId(7).setDescription("Buy milk")
+            .setStatus(WorkItem.Status.UNSTARTED).build();
+    private WorkItem workItemDifferentDescription = WorkItem.builder().setId(2).setUserId(10)
+            .setDescription("Buy cereal").setStatus(WorkItem.Status.UNSTARTED).build();
+    private WorkItem workItemDifferentStatus = WorkItem.builder().setId(2).setUserId(10).setDescription("Buy milk")
+            .setStatus(WorkItem.Status.DONE).build();
 
     @Test
     public void toStringAsExpected() {
@@ -65,11 +68,13 @@ public class TestWorkItem {
 
     @Test
     public void gettersAndSetters() {
-        WorkItem testGettersAndSetters = WorkItem
-                .builder(5, "100% coverage by testing getters and setters too", Status.STARTED).setId(8).build();
+        WorkItem testGettersAndSetters = WorkItem.builder().setId(8).setUserId(5)
+                .setDescription("increase code coverage by testing getters and setters too").setStatus(Status.STARTED)
+                .build();
         assertEquals(8, testGettersAndSetters.getId());
         assertEquals(5, testGettersAndSetters.getUserId());
-        assertEquals("100% coverage by testing getters and setters too", testGettersAndSetters.getDescription());
+        assertEquals("increase code coverage by testing getters and setters too",
+                testGettersAndSetters.getDescription());
         assertEquals(Status.STARTED, testGettersAndSetters.getStatus());
     }
 }
