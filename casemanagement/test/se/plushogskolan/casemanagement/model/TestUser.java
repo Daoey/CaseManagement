@@ -1,13 +1,14 @@
 package se.plushogskolan.casemanagement.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public final class TestUser {
-    int defaultId = 1001;
-    String defaultUsername = "Mr. Youre Face";
+    private int defaultId = 1001;
+    private String defaultUsername = "Mr. Youre Face";
     private User twinUser1;
     private User twinUser2;
     private User brokenUser;

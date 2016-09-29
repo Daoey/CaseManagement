@@ -1,5 +1,9 @@
 package se.plushogskolan.casemanagement.repository;
 
+import java.util.List;
+
+import se.plushogskolan.casemanagement.model.User;
+
 public interface UserRepository {
 
     void saveUser(User user);
