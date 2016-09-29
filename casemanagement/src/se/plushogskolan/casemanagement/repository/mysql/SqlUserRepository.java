@@ -1,5 +1,6 @@
 package se.plushogskolan.casemanagement.repository.mysql;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import se.plushogskolan.casemanagement.model.User;
@@ -11,8 +12,12 @@ public class SqlUserRepository implements UserRepository{
 
     @Override
     public void saveUser(User user) {
-        // TODO Auto-generated method stub
         
+        try{
+            new SqlHelper(url).query("insert into user_table set first_name=?, last_name=?, username=?, active=?, idteam = (select idteam_table from team_table where name like ?)");
+        }catch (SQLException e) {
+            // TODO: handle exception
+        }
     }
 
     @Override
