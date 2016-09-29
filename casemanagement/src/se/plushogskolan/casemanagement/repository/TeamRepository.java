@@ -1,5 +1,9 @@
 package se.plushogskolan.casemanagement.repository;
 
+import java.util.List;
+
+import se.plushogskolan.casemanagement.model.Team;
+
 public interface TeamRepository {
 
     void saveTeam(Team team);
