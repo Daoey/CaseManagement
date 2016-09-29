@@ -9,18 +9,18 @@ public interface WorkItemRepository {
 
     void saveWorkItem(WorkItem workItem) throws RepositoryException;
     
-    void updateStatusById(int workItemId, WorkItem.Status workItemStatus);
+    void updateStatusById(int workItemId, WorkItem.Status workItemStatus) throws RepositoryException;
     
     //Save for last
-    void deleteWorkItem(int workItemId);
+    void deleteWorkItem(int workItemId) throws RepositoryException;
     
-    void addItemToUser(int workItemId, int userId);
+    void addWorkItemToUser(int workItemId, int userId) throws RepositoryException;
     
-    List<WorkItem> getWorkItemsByStatus(WorkItem.Status workItemStatus);
+    List<WorkItem> getWorkItemsByStatus(WorkItem.Status workItemStatus) throws RepositoryException;
     
-    List<WorkItem> getWorkItemsByTeamId(int teamId);
+    List<WorkItem> getWorkItemsByTeamId(int teamId) throws RepositoryException;
     
-    List<WorkItem> getWorkItemsByUserId(int userId);
+    List<WorkItem> getWorkItemsByUserId(int userId) throws RepositoryException;
  
-    List<WorkItem> getWorkItemsWithIssue();
+    List<WorkItem> getWorkItemsWithIssue() throws RepositoryException;
 }
