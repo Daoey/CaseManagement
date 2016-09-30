@@ -12,34 +12,49 @@ public final class Main {
     private static final int ID = 0;
     private static final String USERNAME = "Billy_the_Tester";
     private static final String FIRST_NAME = "Test";
-    private static final String lAST_NAME = "Testsson";
+    private static final String LAST_NAME = "Testsson";
     private static final String NEW_USERNAME = "Updated_Tester";
 
     public static void main(String[] args) {
 
         // USER CRITERIAS
-        // Create User
-        User user = createUser(ID, USERNAME, FIRST_NAME, lAST_NAME);
-
-        // Update User
+        User user = createUser(ID, USERNAME, FIRST_NAME, LAST_NAME);
+        CASE_SERVICE.saveUser(user);
+        
         updateUser(user, NEW_USERNAME);
         updateUser(user, USERNAME); // reset update
 
-        // Inactivate User
         inactivateUser();
         
-        // Get User by id
         getUserById();
+        
+        searchForUser();
+        
+        getUserFromSpecficTeam();
+    }
+
+    private static void getUserFromSpecficTeam() {
+        
+    }
+
+    private static void searchForUser() {
+        User searchedUser;
+        searchedUser = CASE_SERVICE.getUserBy(FIRST_NAME, LAST_NAME, USERNAME);
+        searchedUser = CASE_SERVICE.getUserBy(FIRST_NAME, LAST_NAME, null);
+        searchedUser = CASE_SERVICE.getUserBy(FIRST_NAME, null, null);
+        searchedUser = CASE_SERVICE.getUserBy(null, LAST_NAME, USERNAME);
+        searchedUser = CASE_SERVICE.getUserBy(null, null, USERNAME);
+        searchedUser = CASE_SERVICE.getUserBy(null, LAST_NAME, null);
     }
 
     private static void getUserById() {
-        User userToGet = CASE_SERVICE.getUserBy(FIRST_NAME, lAST_NAME, USERNAME);
+        User userToGet = CASE_SERVICE.getUserBy(FIRST_NAME, LAST_NAME, USERNAME);
         int id = userToGet.getId();
         User userById = CASE_SERVICE.getUserById(id);
     }
 
     private static void inactivateUser() {
-        User userToInactivate = CASE_SERVICE.getUserBy(FIRST_NAME, lAST_NAME, USERNAME);
+        User userToInactivate = CASE_SERVICE.getUserBy(FIRST_NAME, LAST_NAME, USERNAME);
         CASE_SERVICE.inactivateUserById(userToInactivate.getId());
     }
 
@@ -48,9 +63,7 @@ public final class Main {
     }
 
     private static void updateUser(User user, String newUsername) {
-        // Save a user we can update later
-        CASE_SERVICE.saveUser(user);
-
+        
         // Create a User with new values
         User userToEdit = CASE_SERVICE.getUserBy(user.getFirstName(), user.getLastName(), null);
         User userWithNewValues = createUser(userToEdit.getId(), newUsername, userToEdit.getFirstName(),
