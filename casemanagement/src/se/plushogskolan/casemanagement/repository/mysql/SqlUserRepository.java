@@ -1,7 +1,6 @@
 package se.plushogskolan.casemanagement.repository.mysql;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import se.plushogskolan.casemanagement.exception.RepositoryException;
@@ -16,15 +15,6 @@ public class SqlUserRepository implements UserRepository {
     private ResultMapper<User> userMapper = (u -> new UserBuilder().setFirstName(u.getString("first_name"))
             .setLastName(u.getString("last_name")).setActive(u.getBoolean("active")).setTeamId(u.getInt("idteam"))
             .build(u.getInt("iduser_table"), u.getString("username")));
-
-    private boolean nullCheck(String checkedString) {
-
-        if (checkedString.isEmpty()) {
-            return false;
-        }
-
-        return true;
-    }
 
     @Override
     public void saveUser(User user) throws RepositoryException {
