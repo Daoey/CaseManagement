@@ -37,12 +37,21 @@ public final class SqlTeamRepository implements TeamRepository {
 
     @Override
     public void inactivateTeam(int teamId) throws RepositoryException {
+        setTeamActive(teamId, false);
+    }
+
+    @Override
+    public void activateTeam(int teamId) throws RepositoryException {
+        setTeamActive(teamId, true);
+    }
+    
+    private void setTeamActive(int teamId, boolean isActive) throws RepositoryException {
         final String query = "UPDATE team_table SET active = ? WHERE idteam_table = ?;";
         SqlHelper helper = new SqlHelper(databaseUrl);
         try {
-            helper.query(query).parameter(false).parameter(teamId).update();
+            helper.query(query).parameter(isActive).parameter(teamId).update();
         } catch (SQLException e) {
-            throw new RepositoryException("Could not inactivate team with id: \"" + teamId + "\"", e);
+            throw new RepositoryException("Could change active status on team with id: \"" + teamId + "\"", e);
         }
     }
 
@@ -67,6 +76,18 @@ public final class SqlTeamRepository implements TeamRepository {
             helper.query(query).parameter(teamId).parameter(userId).update();
         } catch (SQLException e) {
             throw new RepositoryException("Could not add User \"" + userId + "\" to Team \"" + teamId + "\".", e);
+        }
+    }
+
+    public void deleteFromDatabaseTeamWithNameAndStatus(String teamName, boolean teamActiveStatus)
+            throws RepositoryException {
+        final String query = "delete from team_table where name = ? and active = ? limit 1;";
+        SqlHelper helper = new SqlHelper(databaseUrl);
+        try {
+            helper.query(query).parameter(teamName).parameter(teamActiveStatus).update();
+        } catch (SQLException e) {
+            throw new RepositoryException("Could delete row with param matching teamName: \"" + teamName
+                    + ", activeStatus: \"" + teamActiveStatus + "\". from in team_table in database.", e);
         }
     }
 }
