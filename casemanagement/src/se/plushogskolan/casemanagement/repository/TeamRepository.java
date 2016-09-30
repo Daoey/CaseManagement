@@ -17,4 +17,6 @@ public interface TeamRepository {
 
     void addUserToTeam(int userId, int teamId) throws RepositoryException;
 
+    void activateTeam(int teamId) throws RepositoryException;
+
 }

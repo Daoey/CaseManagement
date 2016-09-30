@@ -61,6 +61,11 @@ public final class CaseService {
         setStatusOfAllWorkItemsOfUserToUnstarted(userId);
     }
 
+    public void activateUserById(int userId) {
+        userRepository.activateUserById(userId);
+        setStatusOfAllWorkItemsOfUserToUnstarted(userId);
+    }
+    
     public User getUserById(int userId) {
         try {
             return userRepository.getUserById(userId);
@@ -100,6 +105,15 @@ public final class CaseService {
     public void inactivateTeam(int teamId) {
         try {
             teamRepository.inactivateTeam(teamId);
+        } catch (RepositoryException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void activateTeam(int teamId) {
+        try {
+            teamRepository.activateTeam(teamId);
         } catch (RepositoryException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
