@@ -5,11 +5,16 @@ import java.util.List;
 
 import se.plushogskolan.casemanagement.exception.RepositoryException;
 import se.plushogskolan.casemanagement.model.User;
+import se.plushogskolan.casemanagement.model.User.UserBuilder;
 import se.plushogskolan.casemanagement.repository.UserRepository;
 
 public class SqlUserRepository implements UserRepository {
 
     private final String url = "jdbc:mysql://localhost:3306/case_db?user=root&password=root&useSSL=false";
+
+    private ResultMapper<User> userMapper = (u -> new UserBuilder().setFirstName(u.getString("first_name"))
+            .setLastName(u.getString("last_name")).setActive(u.getBoolean("active")).setTeamId(u.getInt("idteam"))
+            .build(u.getInt("iduser_table"), u.getString("username")));
 
     @Override
     public void saveUser(User user) throws RepositoryException {
@@ -29,7 +34,7 @@ public class SqlUserRepository implements UserRepository {
     public void updateUser(User newValues) throws RepositoryException {
 
         String query = "update user_table set first_name=?, last_name=?, username=?, active=?, "
-                + "idteam = (select idteam_table from team_table where idteam_table = ?)" + "where iduser_table = ?";
+                + "idteam = (select idteam_table from team_table where idteam_table=?)" + "where iduser_table = ?";
 
         try {
             new SqlHelper(url).query(query).parameter(newValues.getFirstName()).parameter(newValues.getLastName())
@@ -57,9 +62,18 @@ public class SqlUserRepository implements UserRepository {
     }
 
     @Override
-    public User getUserById(int userId) {
-        // TODO Auto-generated method stub
-        return null;
+    public User getUserById(int userId) throws RepositoryException {
+
+        String query = "select iduser_table, first_name, last_name, username, active, idteam "
+                + "from user_table "
+                + "where iduser_table = ?";
+
+        try {
+            return new SqlHelper(url).query(query).parameter(userId).single(userMapper);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RepositoryException("Couldnt get user with userId: " + userId, e);
+        }
     }
 
     @Override
