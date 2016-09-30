@@ -62,7 +62,7 @@ public final class SqlHelper {
                 connection.commit();
                 return mapper.map(resultSet);
             } else {
-                throw new SQLException();
+                throw new SQLException("No result from statement: " + statement.toString());
             }
         }
     }
