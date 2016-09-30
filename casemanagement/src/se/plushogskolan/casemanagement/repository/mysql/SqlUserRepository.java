@@ -29,8 +29,7 @@ public class SqlUserRepository implements UserRepository {
     public void updateUser(User newValues) throws RepositoryException {
 
         String query = "update user_table set first_name=?, last_name=?, username=?, active=?, "
-                + "idteam = (select idteam_table from team_table where idteam_table = ?)"
-                + "where iduser_table = ?";
+                + "idteam = (select idteam_table from team_table where idteam_table = ?)" + "where iduser_table = ?";
 
         try {
             new SqlHelper(url).query(query).parameter(newValues.getFirstName()).parameter(newValues.getLastName())
@@ -44,10 +43,17 @@ public class SqlUserRepository implements UserRepository {
     }
 
     @Override
-    public void inactivateUserById(int userId) {
+    public void inactivateUserById(int userId) throws RepositoryException {
 
-        String query = "";
-        
+        String query = "update user_table set active=? where iduser_table=?";
+
+        try {
+            new SqlHelper(url).query(query).parameter(false).parameter(userId).update();
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Couldnt set user " + userId + " inactive", e);
+        }
+
     }
 
     @Override
