@@ -37,6 +37,12 @@ public class SqlUserRepository implements UserRepository {
     }
 
     @Override
+    public void activateUserById(int userId) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     public User getUserById(int userId) {
         // TODO Auto-generated method stub
         return null;

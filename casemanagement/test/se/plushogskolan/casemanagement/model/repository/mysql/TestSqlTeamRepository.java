@@ -1,9 +1,12 @@
 package se.plushogskolan.casemanagement.model.repository.mysql;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,38 +14,73 @@ import se.plushogskolan.casemanagement.exception.RepositoryException;
 import se.plushogskolan.casemanagement.model.Team;
 import se.plushogskolan.casemanagement.repository.mysql.SqlTeamRepository;
 
-/**
- * 
- * @deprecated because not done. Test results must now be checked manually in database
- *
- */
-@Deprecated
 public final class TestSqlTeamRepository {
-    private String defaultUsername = "Really long username";
+    private String teamNameForTesting = "Team for testing SqlTeamRepo";
+    private boolean statusForTesting = true;
     private Team defaultTeam;
     private SqlTeamRepository sqlTeamRepository;
 
     @Before
     public void setUp() throws Exception {
-        defaultTeam = new Team.TeamBuilder().setActive(true).build(defaultUsername);
+        defaultTeam = new Team.TeamBuilder().setActive(statusForTesting).build(teamNameForTesting);
         sqlTeamRepository = new SqlTeamRepository();
+
+        checkThatOurTeamNotAlreadyInDatabase();
+        sqlTeamRepository.saveTeam(defaultTeam);
+
+        defaultTeam = getTestTeamFromDatabase();
     }
 
-    @Test
-    public void testSaveTeam() throws RepositoryException {
-        // TODO assert before and after
-        sqlTeamRepository.saveTeam(defaultTeam);
+    private void checkThatOurTeamNotAlreadyInDatabase() throws RepositoryException {
+        List<Team> teams = sqlTeamRepository.getAllTeams();
+        for (Team team : teams) {
+            if (teamNameForTesting.equals(team.getName())) {
+                fail();
+            }
+        }
+    }
+
+    @After
+    public void cleanDatabase() throws RepositoryException {
+        sqlTeamRepository.updateTeam(new Team.TeamBuilder().setId(defaultTeam.getId()).setActive(statusForTesting)
+                .build(teamNameForTesting));
+        sqlTeamRepository.deleteFromDatabaseTeamWithNameAndStatus(teamNameForTesting, statusForTesting);
     }
 
     @Test
     public void testUpdateTeam() throws RepositoryException {
-        // TODO make this test runnable many times by resetting values @after or
-        // maybe mock db
-        // TODO check values before
-        Team newValues = new Team.TeamBuilder().setActive(true).setId(3).build("Alles neus name again");
-        // TODO assert values after update
-        // TODO reset values in @after
+        String newTeamNameForTesting = "New Team for testing SqlTeamRepo.updateTeam()";
+        Team testTeamBeforeUpdate = getTestTeamFromDatabase();
+
+        Team newValues = new Team.TeamBuilder().setActive(false).setId(testTeamBeforeUpdate.getId())
+                .build(newTeamNameForTesting);
+
         sqlTeamRepository.updateTeam(newValues);
+
+        Team testTeamAfterUpdate = getTestTeamFromDatabaseWithNewName(newTeamNameForTesting);
+
+        assertEquals(newValues, testTeamAfterUpdate);
+        assertNotEquals(testTeamBeforeUpdate, testTeamAfterUpdate);
+    }
+
+    private Team getTestTeamFromDatabase() throws RepositoryException {
+        List<Team> teams = sqlTeamRepository.getAllTeams();
+        for (Team team : teams) {
+            if (teamNameForTesting.equals(team.getName())) {
+                return team;
+            }
+        }
+        return null;
+    }
+
+    private Team getTestTeamFromDatabaseWithNewName(String newName) throws RepositoryException {
+        List<Team> teams = sqlTeamRepository.getAllTeams();
+        for (Team team : teams) {
+            if (newName.equals(team.getName())) {
+                return team;
+            }
+        }
+        return null;
     }
 
     @Test
