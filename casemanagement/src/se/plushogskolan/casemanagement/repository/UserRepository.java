@@ -7,18 +7,18 @@ import se.plushogskolan.casemanagement.model.User;
 
 public interface UserRepository {
 
-    void saveUser(User user);
+    void saveUser(User user) throws RepositoryException;
 
-    void updateUser(User newValues);
-    
-    void inactivateUserById(int userId);
-    
+    void updateUser(User newValues) throws RepositoryException;
+
+    void inactivateUserById(int userId) throws RepositoryException;
+
+    void activateUserById(int userId) throws RepositoryException;
+
     User getUserById(int userId) throws RepositoryException;
-    
-    User getUserBy(String firstName, String lastName, String username);
-    
-    List<User> getUsersByTeamId(int teamId);
 
-    void activateUserById(int userId);
-    
+    List<User> getUserBy(String firstName, String lastName, String username) throws RepositoryException;
+
+    List<User> getUsersByTeamId(int teamId) throws RepositoryException;
+
 }

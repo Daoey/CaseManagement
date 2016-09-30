@@ -80,7 +80,7 @@ public final class SqlHelper {
             }
             connection.commit();
         } catch (SQLException e) {
-            throw new SQLException();
+            throw new SQLException(e);
         }
 
         return result;

@@ -10,6 +10,7 @@ import se.plushogskolan.casemanagement.repository.mysql.SqlWorkItemRepository;
 import se.plushogskolan.casemanagement.service.CaseService;
 
 public final class UserCriteriasExample {
+    //TODO clean UserCriteriasExample
 
     private final CaseService caseService = createSqlCaseService();
     private final int id = 0;
@@ -31,7 +32,8 @@ public final class UserCriteriasExample {
 
     public void updateUser() {
         // Create a User with new values
-        User userToEdit = caseService.getUserBy(user.getFirstName(), user.getLastName(), null);
+        List<User> searchResult = caseService.getUserBy(user.getFirstName(), user.getLastName(), null);
+        User userToEdit = getUser(searchResult);
         User userWithNewValues = createUser(userToEdit.getId(), newUsername, userToEdit.getFirstName(),
                 userToEdit.getLastName());
 
@@ -40,18 +42,36 @@ public final class UserCriteriasExample {
     }
 
     public void setUserInactive() {
-        User userToInactivate = caseService.getUserBy(firstName, lastName, username);
-        caseService.inactivateUserById(userToInactivate.getId());
+        List<User> searchResult = caseService.getUserBy(firstName, lastName, username);
+        int userId = getUserId(searchResult);
+        caseService.inactivateUserById(userId);
+        
+    }
+
+    private int getUserId(List<User> searchResult) {
+        if (searchResult.size() == 1) {
+            return searchResult.get(0).getId();
+        } else {
+            throw new IllegalArgumentException("Ambiguos searchresult");
+        }
+    }
+
+    private User getUser(List<User> searchResult) {
+        if (searchResult.size() == 1) {
+            return searchResult.get(0);
+        } else {
+            throw new IllegalArgumentException("Ambiguos searchresult");
+        }
     }
 
     public void getUserById() {
-        User userToGet = caseService.getUserBy(firstName, lastName, username);
-        int id = userToGet.getId();
-        User userById = caseService.getUserById(id);
+        List<User> searchResult = caseService.getUserBy(firstName, lastName, username);
+        int userToGetId = getUserId(searchResult);
+        User userById = caseService.getUserById(userToGetId);
     }
 
     public void searchUser() {
-        User searchedUser;
+        List<User> searchedUser;
         searchedUser = caseService.getUserBy(firstName, lastName, username);
         searchedUser = caseService.getUserBy(firstName, lastName, null);
         searchedUser = caseService.getUserBy(firstName, null, null);
@@ -74,8 +94,9 @@ public final class UserCriteriasExample {
     }
 
     public void setUserInactiveSetsUserWorkitemsUnstarted() {
-        User userToInactivate = caseService.getUserBy(firstName, lastName, username);
-        caseService.activateUserById(userToInactivate.getId());
+        List<User> searchResult = caseService.getUserBy(firstName, lastName, username);
+        int idToUserToInactivate = getUserId(searchResult);
+        caseService.activateUserById(idToUserToInactivate);
 
         // WorkItem workItem = WorkItem.builder().setDescription("Test
         // that making User inactive sets Users WorkItems
@@ -83,7 +104,7 @@ public final class UserCriteriasExample {
         // caseService.addWorkItemToUser(workItem.getId(),
         // userToInactivate.getId());
 
-        caseService.inactivateUserById(userToInactivate.getId());
+        caseService.inactivateUserById(idToUserToInactivate);
     }
 
     private CaseService createSqlCaseService() {

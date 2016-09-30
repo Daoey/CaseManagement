@@ -3,6 +3,7 @@ package se.plushogskolan.casemanagement.service;
 import java.util.List;
 
 import se.plushogskolan.casemanagement.exception.RepositoryException;
+import se.plushogskolan.casemanagement.exception.ServiceException;
 import se.plushogskolan.casemanagement.model.Issue;
 import se.plushogskolan.casemanagement.model.Team;
 import se.plushogskolan.casemanagement.model.User;
@@ -41,7 +42,12 @@ public final class CaseService {
         // En User måste ha ett användarnamn som är minst 10 tecken långt
         // Det får max vara 10 users i ett team
         if (usernameLongEnough(user.getUsername()) && teamHasSpace(user.getId(), user.getTeamId())) {
-            userRepository.saveUser(user);
+            try {
+                userRepository.saveUser(user);
+            } catch (RepositoryException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
@@ -49,7 +55,12 @@ public final class CaseService {
         // En User måste ha ett användarnamn som är minst 10 tecken långt
         // Det får max vara 10 users i ett team
         if (usernameLongEnough(newValues.getUsername()) && teamHasSpace(newValues.getId(), newValues.getTeamId())) {
-            userRepository.updateUser(newValues);
+            try {
+                userRepository.updateUser(newValues);
+            } catch (RepositoryException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
 
     }
@@ -57,15 +68,25 @@ public final class CaseService {
     public void inactivateUserById(int userId) {
         // När en User inaktiveras ändras status på alla dennes WorkItem
         // till Unstarted
-        userRepository.inactivateUserById(userId);
+        try {
+            userRepository.inactivateUserById(userId);
+        } catch (RepositoryException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         setStatusOfAllWorkItemsOfUserToUnstarted(userId);
     }
 
     public void activateUserById(int userId) {
-        userRepository.activateUserById(userId);
+        try {
+            userRepository.activateUserById(userId);
+        } catch (RepositoryException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         setStatusOfAllWorkItemsOfUserToUnstarted(userId);
     }
-    
+
     public User getUserById(int userId) {
         try {
             return userRepository.getUserById(userId);
@@ -76,12 +97,20 @@ public final class CaseService {
         }
     }
 
-    public User getUserBy(String firstName, String lastName, String username) {
-        return userRepository.getUserBy(firstName, lastName, username);
+    public List<User> getUserBy(String firstName, String lastName, String username) {
+        try {
+            return userRepository.getUserBy(firstName, lastName, username);
+        } catch (RepositoryException e) {
+            throw new ServiceException("Could not get User by first name, last name, username.", e);
+        }
     }
 
     public List<User> getUsersByTeamId(int teamId) {
-        return userRepository.getUsersByTeamId(teamId);
+        try {
+            return userRepository.getUsersByTeamId(teamId);
+        } catch (RepositoryException e) {
+            throw new ServiceException("Could not get User by Team id", e);
+        }
     }
 
     public void saveTeam(Team team) {
@@ -282,8 +311,12 @@ public final class CaseService {
     }
 
     private boolean numberOfUsersInTeamLessThanTen(int teamId) {
-
-        List<User> users = userRepository.getUsersByTeamId(teamId);
+        List<User> users;
+        try {
+            users = userRepository.getUsersByTeamId(teamId);
+        } catch (RepositoryException e) {
+            throw new ServiceException("Could not numberOfUsersInTeamLessThanTen", e); //TODO clarify exception message
+        }
         return users.size() < 10;
     }
 
