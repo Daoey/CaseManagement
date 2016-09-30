@@ -62,12 +62,8 @@ public final class Team {
         private int id = 0;
         private boolean active = true;
 
-        // private constructor to remove visibility
-        private TeamBuilder() {
-        }
-
-        // Required name
         public Team build(String name) {
+            // Required name
             return new Team(id, active, name);
         }
 
