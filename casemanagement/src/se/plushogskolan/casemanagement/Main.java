@@ -1,9 +1,6 @@
 package se.plushogskolan.casemanagement;
 
-import se.plushogskolan.casemanagement.model.Issue;
-import se.plushogskolan.casemanagement.model.Team;
 import se.plushogskolan.casemanagement.model.User;
-import se.plushogskolan.casemanagement.model.WorkItem;
 import se.plushogskolan.casemanagement.repository.mysql.SqlIssueRepository;
 import se.plushogskolan.casemanagement.repository.mysql.SqlTeamRepository;
 import se.plushogskolan.casemanagement.repository.mysql.SqlUserRepository;
@@ -21,17 +18,19 @@ public final class Main {
         String newUserName = "Updated_Tester";
 
         // USER CRITERIAS
-        // 1. Create User
+        // Create User
         User user = createUser(defaultId, defaultUsername, defaultFirstName, defaultLastName);
 
-        // 2. Update User
+        // Update User
         updateUser(user, newUserName);
+        updateUser(user, defaultUsername); // reset update
 
-        Team team = new Team.TeamBuilder().setActive(true).build("Testers team");
+        // Inactivate User
+        inactivateUser();
+    }
 
-        WorkItem builder = WorkItem.builder().setDescription("Test the latest code.").build();
-
-        Issue issue = Issue.builder(0).setDescription("No new code found.").build();
+    private static void inactivateUser() {
+        // TODO Auto-generated method stub
 
     }
 
