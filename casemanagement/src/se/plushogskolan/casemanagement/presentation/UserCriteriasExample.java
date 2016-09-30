@@ -10,20 +10,26 @@ import se.plushogskolan.casemanagement.repository.mysql.SqlWorkItemRepository;
 import se.plushogskolan.casemanagement.service.CaseService;
 
 public final class UserCriteriasExample {
-    //TODO clean UserCriteriasExample
+    // TODO clean UserCriteriasExample
 
     private final CaseService caseService = createSqlCaseService();
     private final int id = 0;
-    private final String username = "Billy_the_Tester";
+    private final String username = "Billy_the_Tester1";
     private final String userNameWith9Chars = "123456789";
     private final String firstName = "Test";
     private final String lastName = "Testsson";
     private final String newUsername = "Updated_Tester";
     private User user;
+    private final String newLine = "\n";
 
     public void createUser() {
+        System.out.println(newLine + "createUser()");
+        
         user = createUser(id, username, firstName, lastName);
+        System.out.println("User created: " + user.toString());
+        
         caseService.saveUser(user);
+        System.out.println("User saved");
     }
 
     private User createUser(int id, String username, String firstName, String lastName) {
@@ -45,7 +51,7 @@ public final class UserCriteriasExample {
         List<User> searchResult = caseService.getUserBy(firstName, lastName, username);
         int userId = getUserId(searchResult);
         caseService.inactivateUserById(userId);
-        
+
     }
 
     private int getUserId(List<User> searchResult) {

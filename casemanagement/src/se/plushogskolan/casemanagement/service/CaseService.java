@@ -45,8 +45,7 @@ public final class CaseService {
             try {
                 userRepository.saveUser(user);
             } catch (RepositoryException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw new ServiceException("Could save User: " + user.toString(), e);
             }
         }
     }
@@ -298,6 +297,9 @@ public final class CaseService {
         // which means that it is a save operation and not an update operation
         // Consider adding a boolean userExists(userId) method to hide
         // implementation details
+        if (teamId == 0) { // Default team value in User is 0, that means no team
+            return true;
+        }
         try {
             User user = userRepository.getUserById(userId);
             if (user.getTeamId() == teamId) {
