@@ -13,16 +13,13 @@ import se.plushogskolan.casemanagement.repository.UserRepository;
 import se.plushogskolan.casemanagement.repository.WorkItemRepository;
 
 /**
- * - En User måste ha ett användarnamn som är minst 10 tecken långt.
- * - När en User inaktivares ändras status på alla dennes WorkItem till
- * Unstarted
- * - Det får max vara 10 users i ett team
- * - En User kan bara ingå i ett team åt gången
- * - En WorkItem kan inte tilldelas en User som är inaktiv
- * - En User kan max ha 5 WorkItems samtidigt
- * - Ett Issue ska bara kunna läggas till work item som har status Done
- * - När en Issue läggs till en work item ändras status för work item till
- * Unstarted
+ * - En User måste ha ett användarnamn som är minst 10 tecken långt. - När en
+ * User inaktivares ändras status på alla dennes WorkItem till Unstarted - Det
+ * får max vara 10 users i ett team - En User kan bara ingå i ett team åt gången
+ * - En WorkItem kan inte tilldelas en User som är inaktiv - En User kan max ha
+ * 5 WorkItems samtidigt - Ett Issue ska bara kunna läggas till work item som
+ * har status Done - När en Issue läggs till en work item ändras status för
+ * workitem till Unstarted
  */
 
 public final class CaseService {
@@ -41,7 +38,7 @@ public final class CaseService {
     }
 
     public void saveUser(User user) {
-        // TODO - En User måste ha ett användarnamn som är minst 10 tecken långt
+        // En User måste ha ett användarnamn som är minst 10 tecken långt
         // Det får max vara 10 users i ett team
         if (usernameLongEnough(user.getUsername()) && teamHasSpace(user.getId(), user.getTeamId())) {
             userRepository.saveUser(user);
@@ -49,9 +46,8 @@ public final class CaseService {
     }
 
     public void updateUser(User newValues) {
-        // TODO - En User måste ha ett användarnamn som är minst 10 tecken långt
+        // En User måste ha ett användarnamn som är minst 10 tecken långt
         // Det får max vara 10 users i ett team
-
         if (usernameLongEnough(newValues.getUsername()) && teamHasSpace(newValues.getId(), newValues.getTeamId())) {
             userRepository.updateUser(newValues);
         }
@@ -59,7 +55,7 @@ public final class CaseService {
     }
 
     public void inactivateUserById(int userId) {
-        // TODO - När en User inaktiveras ändras status på alla dennes WorkItem
+        // När en User inaktiveras ändras status på alla dennes WorkItem
         // till Unstarted
         userRepository.inactivateUserById(userId);
         setStatusOfAllWorkItemsOfUserToUnstarted(userId);
@@ -121,7 +117,7 @@ public final class CaseService {
     }
 
     public void addUserToTeam(int userId, int teamId) {
-        // TODO Det får max vara 10 users i ett team
+        // Det får max vara 10 users i ett team
         if (teamHasSpace(userId, teamId)) {
             try {
                 teamRepository.addUserToTeam(userId, teamId);
@@ -133,8 +129,6 @@ public final class CaseService {
     }
 
     public void saveWorkItem(WorkItem workItem) {
-        // TODO - En WorkItem kan inte tilldelas en User som är inaktiv
-        //
         try {
             workItemRepository.saveWorkItem(workItem);
         } catch (RepositoryException e) {
@@ -150,14 +144,17 @@ public final class CaseService {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        // TODO
     }
 
     // Save for last
     public void deleteWorkItem(int workItemId) {
-        // TODO
+        // När ni tar bort något (exempelvis en WorkItem) behöver ni fundera på
+        // hur detta ska påverka
+        // eventuellt relaterad data
         try {
             workItemRepository.deleteWorkItem(workItemId);
+            // Clean before or after delete?
+            cleanRelatedDataOnWorkItemDelete();
         } catch (RepositoryException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -165,17 +162,19 @@ public final class CaseService {
     }
 
     public void addWorkItemToUser(int workItemId, int userId) {
-        // TODO
-        try {
-            workItemRepository.addWorkItemToUser(workItemId, userId);
-        } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        // En WorkItem kan inte tilldelas en User som är inaktiv
+        // En User kan max ha 5 WorkItems samtidigt
+        if (userIsActive(userId) && userHasSpaceForAdditionalWorkItem(workItemId, userId)) {
+            try {
+                workItemRepository.addWorkItemToUser(workItemId, userId);
+            } catch (RepositoryException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
     public List<WorkItem> getWorkItemsByStatus(WorkItem.Status workItemStatus) {
-        // TODO
         try {
             return workItemRepository.getWorkItemsByStatus(workItemStatus);
         } catch (RepositoryException e) {
@@ -186,7 +185,6 @@ public final class CaseService {
     }
 
     public List<WorkItem> getWorkItemsByTeamId(int teamId) {
-        // TODO
         try {
             return workItemRepository.getWorkItemsByTeamId(teamId);
         } catch (RepositoryException e) {
@@ -197,7 +195,6 @@ public final class CaseService {
     }
 
     public List<WorkItem> getWorkItemsByUserId(int userId) {
-        // TODO
         try {
             return workItemRepository.getWorkItemsByUserId(userId);
         } catch (RepositoryException e) {
@@ -208,7 +205,6 @@ public final class CaseService {
     }
 
     public List<WorkItem> getWorkItemsWithIssue() {
-        // TODO
         try {
             return workItemRepository.getWorkItemsWithIssue();
         } catch (RepositoryException e) {
@@ -219,22 +215,37 @@ public final class CaseService {
     }
 
     public void saveIssue(Issue issue) {
-        // TODO
-        issueRepository.saveIssue(issue);
+        // Ett Issue ska bara kunna läggas till work item som har status Done
+        // När en Issue läggs till en work item ändras status för workitem till
+        // Unstarted
+        if (workItemIsDone(issue.getWorkItemId())) {
+            try {
+                issueRepository.saveIssue(issue);
+                workItemRepository.updateStatusById(issue.getWorkItemId(), WorkItem.Status.UNSTARTED);
+            } catch (RepositoryException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 
     public void updateIssue(Issue newValues) {
-        // TODO
-        issueRepository.updateIssue(newValues);
+        // Ett Issue ska bara kunna läggas till work item som har status
+        // Done
+        // När en Issue läggs till en work item ändras status för workitem
+        // till Unstarted
+        if (workItemIsDone(newValues.getWorkItemId())) {
+            issueRepository.updateIssue(newValues);
+        }
     }
 
     private boolean usernameLongEnough(String username) {
-        // TODO - En User måste ha ett användarnamn som är minst 10 tecken långt
+        // En User måste ha ett användarnamn som är minst 10 tecken långt
         return username.length() >= 10;
     }
 
     private boolean teamHasSpace(int userId, int teamId) {
-        // TODO Det får max vara 10 users i ett team
+        // Det får max vara 10 users i ett team
         // throws Repository exception if no user by that id is found
         // which means that it is a save operation and not an update operation
         // Consider adding a boolean userExists(userId) method to hide
@@ -258,7 +269,7 @@ public final class CaseService {
     }
 
     private void setStatusOfAllWorkItemsOfUserToUnstarted(int userId) {
-        // TODO - När en User inaktiveras ändras status på alla dennes WorkItem
+        // När en User inaktiveras ändras status på alla dennes WorkItem
         List<WorkItem> workItems;
         try {
             workItems = workItemRepository.getWorkItemsByUserId(userId);
@@ -269,6 +280,49 @@ public final class CaseService {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    private boolean userIsActive(int userId) {
+        // En WorkItem kan inte tilldelas en User som är inaktiv
+        User user;
+        try {
+            user = userRepository.getUserById(userId);
+        } catch (RepositoryException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+        return user.isActive();
+    }
+
+    private boolean userHasSpaceForAdditionalWorkItem(int workItemId, int userId) {
+        // En User kan max ha 5 WorkItems samtidigt
+        try {
+            List<WorkItem> workItems = workItemRepository.getWorkItemsByUserId(userId);
+            for (WorkItem workItem : workItems) {
+                if (workItem.getId() == workItemId) {
+                    return true;
+                }
+            }
+            return workItems.size() < 5;
+
+        } catch (RepositoryException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean workItemIsDone(int workItemId) {
+        // TODO Implement me!
+        // Consider creating a method
+        // workItemRepository.getWorkItemById(workItemId);
+        return true;
+    }
+
+    private void cleanRelatedDataOnWorkItemDelete() {
+        // TODO Implement me
+
     }
 
 }
