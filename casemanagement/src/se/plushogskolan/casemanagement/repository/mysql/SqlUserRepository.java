@@ -1,6 +1,7 @@
 package se.plushogskolan.casemanagement.repository.mysql;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import se.plushogskolan.casemanagement.exception.RepositoryException;
@@ -15,6 +16,15 @@ public class SqlUserRepository implements UserRepository {
     private ResultMapper<User> userMapper = (u -> new UserBuilder().setFirstName(u.getString("first_name"))
             .setLastName(u.getString("last_name")).setActive(u.getBoolean("active")).setTeamId(u.getInt("idteam"))
             .build(u.getInt("iduser_table"), u.getString("username")));
+
+    private boolean nullCheck(String checkedString) {
+
+        if (checkedString.isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
 
     @Override
     public void saveUser(User user) throws RepositoryException {
@@ -64,8 +74,7 @@ public class SqlUserRepository implements UserRepository {
     @Override
     public User getUserById(int userId) throws RepositoryException {
 
-        String query = "select iduser_table, first_name, last_name, username, active, idteam "
-                + "from user_table "
+        String query = "select iduser_table, first_name, last_name, username, active, idteam " + "from user_table "
                 + "where iduser_table = ?";
 
         try {
@@ -77,15 +86,31 @@ public class SqlUserRepository implements UserRepository {
     }
 
     @Override
-    public User getUserBy(String firstName, String lastName, String username) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<User> getUserBy(String firstName, String lastName, String username) throws RepositoryException {
+
+        String query = "select * from user_table where instr(first_name, ?) > 0 and instr(last_name, ?) > 0 "
+                + "and instr(username, ?) > 0;";
+
+        try {
+            return new SqlHelper(url).query(query).parameter(firstName).parameter(lastName).parameter(username)
+                    .many(userMapper);
+        } catch (SQLException e) {
+            String exceptionMessage = String.format("Couldnt fetch Users from %s , %s , %s", firstName, lastName,
+                    username);
+            throw new RepositoryException(exceptionMessage, e);
+        }
     }
 
     @Override
-    public List<User> getUsersByTeamId(int teamId) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<User> getUsersByTeamId(int teamId) throws RepositoryException {
+
+        String query = "select * from user_table" + "where idteam = ?";
+
+        try {
+            return new SqlHelper(url).query(query).parameter(teamId).many(userMapper);
+        } catch (SQLException e) {
+            throw new RepositoryException("Couldnt get users by team id: " + teamId, e);
+        }
     }
 
 }
