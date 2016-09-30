@@ -1,5 +1,7 @@
 package se.plushogskolan.casemanagement;
 
+import java.util.List;
+
 import se.plushogskolan.casemanagement.model.User;
 import se.plushogskolan.casemanagement.repository.mysql.SqlIssueRepository;
 import se.plushogskolan.casemanagement.repository.mysql.SqlTeamRepository;
@@ -11,6 +13,7 @@ public final class Main {
     private static final CaseService CASE_SERVICE = createSqlCaseService();
     private static final int ID = 0;
     private static final String USERNAME = "Billy_the_Tester";
+    private static final String USERNAME_WITH_9_CHARS = "123456789";
     private static final String FIRST_NAME = "Test";
     private static final String LAST_NAME = "Testsson";
     private static final String NEW_USERNAME = "Updated_Tester";
@@ -20,21 +23,28 @@ public final class Main {
         // USER CRITERIAS
         User user = createUser(ID, USERNAME, FIRST_NAME, LAST_NAME);
         CASE_SERVICE.saveUser(user);
-        
+
         updateUser(user, NEW_USERNAME);
         updateUser(user, USERNAME); // reset update
 
         inactivateUser();
-        
+
         getUserById();
-        
+
         searchForUser();
-        
-        getUserFromSpecficTeam();
+
+        List<User> users = CASE_SERVICE.getUsersByTeamId(1);
+
+        usernameMustBeTenCharsLong();
     }
 
-    private static void getUserFromSpecficTeam() {
-        
+    private static void usernameMustBeTenCharsLong() {
+        try {
+            User badUser = createUser(ID, USERNAME_WITH_9_CHARS, FIRST_NAME, LAST_NAME);
+            CASE_SERVICE.saveUser(badUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static void searchForUser() {
@@ -63,7 +73,7 @@ public final class Main {
     }
 
     private static void updateUser(User user, String newUsername) {
-        
+
         // Create a User with new values
         User userToEdit = CASE_SERVICE.getUserBy(user.getFirstName(), user.getLastName(), null);
         User userWithNewValues = createUser(userToEdit.getId(), newUsername, userToEdit.getFirstName(),
