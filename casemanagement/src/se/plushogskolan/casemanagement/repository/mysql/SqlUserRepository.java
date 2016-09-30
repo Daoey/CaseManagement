@@ -49,14 +49,23 @@ public class SqlUserRepository implements UserRepository {
 
     @Override
     public void inactivateUserById(int userId) throws RepositoryException {
+        setUserActive(userId, false);
+    }
+
+    @Override
+    public void activateUserById(int userId) throws RepositoryException {
+        setUserActive(userId, true);
+    }
+
+    private void setUserActive(int userId, boolean isActive) throws RepositoryException {
 
         String query = "update user_table set active=? where iduser_table=?";
 
         try {
-            new SqlHelper(url).query(query).parameter(false).parameter(userId).update();
+            new SqlHelper(url).query(query).parameter(isActive).parameter(userId).update();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Couldnt set user " + userId + " inactive", e);
+            throw new RepositoryException("Couldnt set user " + userId + " active " + isActive, e);
         }
 
     }
@@ -102,5 +111,4 @@ public class SqlUserRepository implements UserRepository {
             throw new RepositoryException("Couldnt get users by team id: " + teamId, e);
         }
     }
-
 }

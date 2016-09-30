@@ -13,6 +13,8 @@ public interface UserRepository {
     
     void inactivateUserById(int userId) throws RepositoryException;
     
+    void activateUserById(int userId) throws RepositoryException;
+    
     User getUserById(int userId) throws RepositoryException;
     
     List<User> getUserBy(String firstName, String lastName, String username) throws RepositoryException;
