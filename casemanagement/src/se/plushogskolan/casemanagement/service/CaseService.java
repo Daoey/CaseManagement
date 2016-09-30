@@ -249,7 +249,12 @@ public final class CaseService {
         // När en Issue läggs till en work item ändras status för workitem
         // till Unstarted
         if (workItemIsDone(newValues.getWorkItemId())) {
-            issueRepository.updateIssue(newValues);
+            try {
+                issueRepository.updateIssue(newValues);
+            } catch (RepositoryException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
