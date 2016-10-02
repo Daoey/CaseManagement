@@ -123,7 +123,7 @@ public final class CaseService {
         try {
             teamRepository.updateTeam(newValues);
         } catch (RepositoryException e) {
-            throw new ServiceException("Could not update Team with id " + newValues.getId() + ".", e);
+            throw new ServiceException("Could not update Team with id " + newValues.getId() , e);
         }
     }
 
@@ -167,8 +167,7 @@ public final class CaseService {
         try {
             workItemRepository.saveWorkItem(workItem);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ServiceException("Could not save workItem: " + workItem.toString(), e);
         }
     }
 
@@ -176,8 +175,8 @@ public final class CaseService {
         try {
             workItemRepository.updateStatusById(workItemId, workItemStatus);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ServiceException("Could not update status to: \"" + workItemStatus.toString()
+                    + "\" on WorkItem with id: " + workItemId, e);
         }
     }
 
@@ -191,8 +190,7 @@ public final class CaseService {
             // Clean before or after delete?
             cleanRelatedDataOnWorkItemDelete();
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ServiceException("Could not delete WorkItem with id: " + workItemId, e);
         }
     }
 
@@ -203,8 +201,7 @@ public final class CaseService {
             try {
                 workItemRepository.addWorkItemToUser(workItemId, userId);
             } catch (RepositoryException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw new ServiceException("Could not add WorkItem " + workItemId + " to User " + userId, e);
             }
         }
     }
@@ -213,9 +210,7 @@ public final class CaseService {
         try {
             return workItemRepository.getWorkItemsByStatus(workItemStatus);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
+            throw new ServiceException("Could not WorkItems with status " + workItemStatus, e);
         }
     }
 
@@ -223,9 +218,7 @@ public final class CaseService {
         try {
             return workItemRepository.getWorkItemsByTeamId(teamId);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
+            throw new ServiceException("Could not get WorkItem connected to Team id " + teamId, e);
         }
     }
 
@@ -233,9 +226,7 @@ public final class CaseService {
         try {
             return workItemRepository.getWorkItemsByUserId(userId);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
+            throw new ServiceException("Could not WorkItem connected to User id " + userId, e);
         }
     }
 
@@ -243,9 +234,7 @@ public final class CaseService {
         try {
             return workItemRepository.getWorkItemsWithIssue();
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
+            throw new ServiceException("Could not WorkItems with Issues", e);
         }
     }
 
@@ -258,8 +247,7 @@ public final class CaseService {
                 issueRepository.saveIssue(issue);
                 workItemRepository.updateStatusById(issue.getWorkItemId(), WorkItem.Status.UNSTARTED);
             } catch (RepositoryException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw new ServiceException("Could not save Issue " + issue, e);
             }
         }
     }
