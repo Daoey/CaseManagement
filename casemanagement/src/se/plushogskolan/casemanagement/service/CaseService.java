@@ -61,7 +61,6 @@ public final class CaseService {
                 e.printStackTrace();
             }
         }
-
     }
 
     public void inactivateUserById(int userId) {
@@ -116,8 +115,7 @@ public final class CaseService {
         try {
             teamRepository.saveTeam(team);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ServiceException("Could not save Team: " + team.toString(), e);
         }
     }
 
@@ -125,8 +123,7 @@ public final class CaseService {
         try {
             teamRepository.updateTeam(newValues);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ServiceException("Could not update Team with id " + newValues.getId() + ".", e);
         }
     }
 
@@ -134,8 +131,7 @@ public final class CaseService {
         try {
             teamRepository.inactivateTeam(teamId);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ServiceException("Could not inactivate Team with id \"" + teamId + "\".", e);
         }
     }
 
@@ -143,8 +139,7 @@ public final class CaseService {
         try {
             teamRepository.activateTeam(teamId);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ServiceException("Could not activate Team with id \"" + teamId + "\".", e);
         }
     }
 
@@ -152,9 +147,7 @@ public final class CaseService {
         try {
             return teamRepository.getAllTeams();
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
+            throw new ServiceException("Could not get all Team", e);
         }
     }
 
@@ -164,8 +157,8 @@ public final class CaseService {
             try {
                 teamRepository.addUserToTeam(userId, teamId);
             } catch (RepositoryException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw new ServiceException(
+                        "Could not add User with id \"" + userId + "\" to Team with id \"" + teamId + "\".", e);
             }
         }
     }
@@ -297,7 +290,7 @@ public final class CaseService {
         // which means that it is a save operation and not an update operation
         // Consider adding a boolean userExists(userId) method to hide
         // implementation details
-        if (teamId == 0) { // Default team value in User is 0, that means no team
+        if (teamId == 0) { // teamId = 0 means no specific team is set to User
             return true;
         }
         try {
@@ -317,7 +310,10 @@ public final class CaseService {
         try {
             users = userRepository.getUsersByTeamId(teamId);
         } catch (RepositoryException e) {
-            throw new ServiceException("Could not numberOfUsersInTeamLessThanTen", e); //TODO clarify exception message
+            throw new ServiceException("Could not numberOfUsersInTeamLessThanTen", e); // TODO
+                                                                                       // clarify
+                                                                                       // exception
+                                                                                       // message
         }
         return users.size() < 10;
     }
