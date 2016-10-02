@@ -63,26 +63,24 @@ public final class CaseService {
         }
     }
 
-    public void inactivateUserById(int userId) {
+    public void inactivateUserById(int userId) { // TODO should be done with db-commit?
         // När en User inaktiveras ändras status på alla dennes WorkItem
         // till Unstarted
         try {
             userRepository.inactivateUserById(userId);
+            setStatusOfAllWorkItemsOfUserToUnstarted(userId);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ServiceException("Could not inactivate User with id " + userId, e);
         }
-        setStatusOfAllWorkItemsOfUserToUnstarted(userId);
     }
 
-    public void activateUserById(int userId) {
+    public void activateUserById(int userId) { // TODO should be done with db-commit?
         try {
             userRepository.activateUserById(userId);
+            setStatusOfAllWorkItemsOfUserToUnstarted(userId);//TODO should set started?
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ServiceException("Could not activate User with id " + userId, e);
         }
-        setStatusOfAllWorkItemsOfUserToUnstarted(userId);
     }
 
     public User getUserById(int userId) {
@@ -123,7 +121,7 @@ public final class CaseService {
         try {
             teamRepository.updateTeam(newValues);
         } catch (RepositoryException e) {
-            throw new ServiceException("Could not update Team with id " + newValues.getId() , e);
+            throw new ServiceException("Could not update Team with id " + newValues.getId(), e);
         }
     }
 
@@ -261,8 +259,8 @@ public final class CaseService {
             try {
                 issueRepository.updateIssue(newValues);
             } catch (RepositoryException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw new ServiceException("Could not update Issue with id " + newValues.getId() + " and new values "
+                        + newValues.toString(), e);
             }
         }
     }
@@ -306,17 +304,12 @@ public final class CaseService {
         return users.size() < 10;
     }
 
-    private void setStatusOfAllWorkItemsOfUserToUnstarted(int userId) {
+    private void setStatusOfAllWorkItemsOfUserToUnstarted(int userId) throws RepositoryException {
         // När en User inaktiveras ändras status på alla dennes WorkItem
         List<WorkItem> workItems;
-        try {
-            workItems = workItemRepository.getWorkItemsByUserId(userId);
-            for (WorkItem workItem : workItems) {
-                workItemRepository.updateStatusById(workItem.getId(), WorkItem.Status.UNSTARTED);
-            }
-        } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        workItems = workItemRepository.getWorkItemsByUserId(userId);
+        for (WorkItem workItem : workItems) {
+            workItemRepository.updateStatusById(workItem.getId(), WorkItem.Status.UNSTARTED);
         }
     }
 
