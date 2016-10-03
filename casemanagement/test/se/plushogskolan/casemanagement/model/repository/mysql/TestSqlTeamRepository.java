@@ -22,7 +22,7 @@ public final class TestSqlTeamRepository {
 
     @Before
     public void setUp() throws Exception {
-        defaultTeam = new Team.TeamBuilder().setActive(statusForTesting).build(teamNameForTesting);
+        defaultTeam = Team.builder().setActive(statusForTesting).build(teamNameForTesting);
         sqlTeamRepository = new SqlTeamRepository();
 
         checkThatOurTeamNotAlreadyInDatabase();
@@ -42,7 +42,7 @@ public final class TestSqlTeamRepository {
 
     @After
     public void cleanDatabase() throws RepositoryException {
-        sqlTeamRepository.updateTeam(new Team.TeamBuilder().setId(defaultTeam.getId()).setActive(statusForTesting)
+        sqlTeamRepository.updateTeam(Team.builder().setId(defaultTeam.getId()).setActive(statusForTesting)
                 .build(teamNameForTesting));
         sqlTeamRepository.deleteFromDatabaseTeamWithNameAndStatus(teamNameForTesting, statusForTesting);
     }
@@ -52,7 +52,7 @@ public final class TestSqlTeamRepository {
         String newTeamNameForTesting = "New Team for testing SqlTeamRepo.updateTeam()";
         Team testTeamBeforeUpdate = getTestTeamFromDatabase();
 
-        Team newValues = new Team.TeamBuilder().setActive(false).setId(testTeamBeforeUpdate.getId())
+        Team newValues = Team.builder().setActive(false).setId(testTeamBeforeUpdate.getId())
                 .build(newTeamNameForTesting);
 
         sqlTeamRepository.updateTeam(newValues);
