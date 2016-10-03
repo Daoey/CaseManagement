@@ -58,8 +58,7 @@ public final class CaseService {
                 userRepository.updateUser(newValues);
             }
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ServiceException("Could not update user " + newValues, e);
         }
 
     }
@@ -76,11 +75,9 @@ public final class CaseService {
         }
     }
 
-    public void activateUserById(int userId) { // TODO should be done with
-        // db-commit?
+    public void activateUserById(int userId) {
         try {
             userRepository.activateUserById(userId);
-            setStatusOfAllWorkItemsOfUserToUnstarted(userId);// TODO should set started
         } catch (RepositoryException e) {
             throw new ServiceException("Could not activate User with id " + userId, e);
         }
@@ -90,9 +87,7 @@ public final class CaseService {
         try {
             return userRepository.getUserById(userId);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
+            throw new ServiceException("Could not get User by id " + userId, e);
         }
     }
 
@@ -108,7 +103,7 @@ public final class CaseService {
         try {
             return userRepository.getUsersByTeamId(teamId);
         } catch (RepositoryException e) {
-            throw new ServiceException("Could not get User by Team id", e);
+            throw new ServiceException("Could not get User by TeamId, teamId=" + teamId, e);
         }
     }
 
@@ -275,10 +270,6 @@ public final class CaseService {
 
     private boolean teamHasSpace(int userId, int teamId) throws RepositoryException {
         // Det får max vara 10 users i ett team
-        // throws Repository exception if no user by that id is found
-        // which means that it is a save operation and not an update operation
-        // Consider adding a boolean userExists(userId) method to hide
-        // implementation details
         if (teamId == 0) { // teamId = 0 means no specific team is set to User
             return true;
         }
@@ -310,9 +301,7 @@ public final class CaseService {
         try {
             user = userRepository.getUserById(userId);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return false;
+            throw new ServiceException("Can not get user with id " + userId, e);
         }
         return user.isActive();
     }
@@ -329,9 +318,7 @@ public final class CaseService {
             return workItems.size() < 5;
 
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return false;
+            throw new ServiceException("Could not get workItems for user with id=" + userId, e);
         }
     }
 
