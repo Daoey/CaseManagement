@@ -20,8 +20,8 @@ public final class TestTeam {
 
     @Before
     public void setup() {
-        teamTwin1 = new Team.TeamBuilder().setId(defaultId).build(defaultName);
-        teamTwin2 = new Team.TeamBuilder().setId(defaultId).build(defaultName);
+        teamTwin1 = Team.builder().setId(defaultId).build(defaultName);
+        teamTwin2 = Team.builder().setId(defaultId).build(defaultName);
     }
 
     @Test
@@ -29,10 +29,10 @@ public final class TestTeam {
 
         assertEquals(teamTwin1, teamTwin2);
 
-        anotherTeam = new Team.TeamBuilder().build(defaultName);
+        anotherTeam = Team.builder().build(defaultName);
         assertNotEquals(teamTwin1, anotherTeam);
 
-        anotherTeam = new Team.TeamBuilder().build(anotherName);
+        anotherTeam = Team.builder().build(anotherName);
         assertNotEquals(teamTwin1, anotherTeam);
     }
 
@@ -40,17 +40,17 @@ public final class TestTeam {
     public void testTeamHashCode() {
         assertEquals(teamTwin1.hashCode(), teamTwin2.hashCode());
 
-        anotherTeam = new Team.TeamBuilder().build(defaultName);
+        anotherTeam = Team.builder().build(defaultName);
         assertNotEquals(teamTwin1.hashCode(), anotherTeam.hashCode());
 
-        anotherTeam = new Team.TeamBuilder().build(anotherName);
+        anotherTeam = Team.builder().build(anotherName);
         assertNotEquals(teamTwin1.hashCode(), anotherTeam.hashCode());
     }
 
     @Test
     public void testTeamBuilder() {
         List<User> users = new ArrayList<>();
-        users.add(new User.UserBuilder().build(1001, "long username"));
-        new Team.TeamBuilder().setActive(false).build(defaultName);
+        users.add(User.builder().build(1001, "long username"));
+        Team.builder().setActive(false).build(defaultName);
     }
 }

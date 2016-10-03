@@ -9,7 +9,7 @@ import se.plushogskolan.casemanagement.repository.TeamRepository;
 
 public final class SqlTeamRepository implements TeamRepository {
     private final String databaseUrl = "jdbc:mysql://localhost:3306/case_db?user=root&password=root&useSSL=false";
-    private final ResultMapper<Team> teamMapper = (r -> new Team.TeamBuilder().setId(r.getInt("idteam_table"))
+    private final ResultMapper<Team> teamMapper = (r -> Team.builder().setId(r.getInt("idteam_table"))
             .setActive(r.getBoolean("active")).build(r.getString("name")));
 
     @Override

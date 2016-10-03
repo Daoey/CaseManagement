@@ -19,6 +19,10 @@ public final class User {
         this.lastName = lastName;
     }
 
+    public static UserBuilder builder() {
+        return new UserBuilder();
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -85,6 +89,10 @@ public final class User {
         private boolean isActive = true;
         private String firstName = "";
         private String lastName = "";
+        
+        private UserBuilder() {
+            super();
+        }
 
         public User build(int id, String username) {
             this.id = id;
