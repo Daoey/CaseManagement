@@ -184,7 +184,7 @@ public final class CaseService {
         try {
             workItemRepository.deleteWorkItem(workItemId);
             // Clean before or after delete?
-            cleanRelatedDataOnWorkItemDelete();
+            cleanRelatedDataOnWorkItemDelete(workItemId);
         } catch (RepositoryException e) {
             throw new ServiceException("Could not delete WorkItem with id: " + workItemId, e);
         }
@@ -318,15 +318,25 @@ public final class CaseService {
     }
 
     private boolean workItemIsDone(int workItemId) {
-        // TODO Implement me!
-        // Consider creating a method
-        // workItemRepository.getWorkItemById(workItemId);
-        return true;
+        try {
+            
+            WorkItem workItem = workItemRepository.getWorkItemById(workItemId).get(0);
+            return WorkItem.Status.DONE.equals(workItem.getStatus());
+            
+        } catch (RepositoryException e) {
+            throw new ServiceException("Could not get WorkItem with id " + workItemId, e);
+        }
     }
 
-    private void cleanRelatedDataOnWorkItemDelete() {
-        // TODO Implement me
+    private void cleanRelatedDataOnWorkItemDelete(int workItemId) {
+        try {
 
+            // TODO Implement me
+            workItemRepository.deleteWorkItem(workItemId);
+
+        } catch (RepositoryException e) {
+            throw new ServiceException(
+                    "Could not clean data related to WorkItem " + workItemId + "when deleting WorkItem", e);
+        }
     }
-
 }
