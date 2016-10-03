@@ -55,7 +55,7 @@ public final class Issue {
         return description;
     }
 
-    public static class IssueBuilder {
+    public static final class IssueBuilder {
         private int id = 0;
         private int workItemId;
         private String description = "";

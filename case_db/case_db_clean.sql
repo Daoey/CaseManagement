@@ -6,7 +6,7 @@ CREATE TABLE `status_table` (
   `name` varchar(45) NOT NULL,
   PRIMARY KEY (`idstatus_table`),
   UNIQUE KEY `idstatus_table_UNIQUE` (`idstatus_table`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `team_table` (
   `idteam_table` int(11) NOT NULL AUTO_INCREMENT,
@@ -14,7 +14,7 @@ CREATE TABLE `team_table` (
   `active` tinyint(4) NOT NULL,
   PRIMARY KEY (`idteam_table`),
   UNIQUE KEY `idteam_table_UNIQUE` (`idteam_table`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `user_table` (
   `iduser_table` int(11) NOT NULL AUTO_INCREMENT,
@@ -28,7 +28,7 @@ CREATE TABLE `user_table` (
   UNIQUE KEY `username_UNIQUE` (`username`),
   KEY `fk_user_team_idx` (`idteam`),
   CONSTRAINT `fk_user_team` FOREIGN KEY (`idteam`) REFERENCES `team_table` (`idteam_table`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `work_item_table` (
   `idwork_item_table` int(11) NOT NULL AUTO_INCREMENT,
@@ -39,7 +39,7 @@ CREATE TABLE `work_item_table` (
   UNIQUE KEY `idwork_item_table_UNIQUE` (`idwork_item_table`),
   KEY `fk_work_item_status_idx` (`idstatus`),
   CONSTRAINT `fk_work_item_status` FOREIGN KEY (`idstatus`) REFERENCES `status_table` (`idstatus_table`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `issue_table` (
   `idissue_table` int(11) NOT NULL AUTO_INCREMENT,
@@ -49,7 +49,7 @@ CREATE TABLE `issue_table` (
   UNIQUE KEY `idissue_table_UNIQUE` (`idissue_table`),
   KEY `fk_issue_work_item_idx` (`idwork_item`),
   CONSTRAINT `fk_issue_work_item` FOREIGN KEY (`idwork_item`) REFERENCES `work_item_table` (`idwork_item_table`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 INSERT INTO `case_db`.`status_table`
 (`idstatus_table`,
