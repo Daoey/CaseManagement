@@ -127,7 +127,7 @@ public final class CaseService {
         try {
             teamRepository.inactivateTeam(teamId);
         } catch (RepositoryException e) {
-            throw new ServiceException("Could not inactivate Team with id \"" + teamId + "\".", e);
+            throw new ServiceException("Could not inactivate Team with id \"" + teamId, e);
         }
     }
 
@@ -135,7 +135,7 @@ public final class CaseService {
         try {
             teamRepository.activateTeam(teamId);
         } catch (RepositoryException e) {
-            throw new ServiceException("Could not activate Team with id \"" + teamId + "\".", e);
+            throw new ServiceException("Could not activate Team with id \"" + teamId, e);
         }
     }
 
@@ -143,7 +143,7 @@ public final class CaseService {
         try {
             return teamRepository.getAllTeams();
         } catch (RepositoryException e) {
-            throw new ServiceException("Could not get all Team", e);
+            throw new ServiceException("Could not get all Teams", e);
         }
     }
 
@@ -193,12 +193,12 @@ public final class CaseService {
     public void addWorkItemToUser(int workItemId, int userId) {
         // En WorkItem kan inte tilldelas en User som är inaktiv
         // En User kan max ha 5 WorkItems samtidigt
-        if (userIsActive(userId) && userHasSpaceForAdditionalWorkItem(workItemId, userId)) {
-            try {
+        try {
+            if (userIsActive(userId) && userHasSpaceForAdditionalWorkItem(workItemId, userId)) {
                 workItemRepository.addWorkItemToUser(workItemId, userId);
-            } catch (RepositoryException e) {
-                throw new ServiceException("Could not add WorkItem " + workItemId + " to User " + userId, e);
             }
+        } catch (RepositoryException e) {
+            throw new ServiceException("Could not add WorkItem " + workItemId + " to User " + userId, e);
         }
     }
 
@@ -306,20 +306,15 @@ public final class CaseService {
         return user.isActive();
     }
 
-    private boolean userHasSpaceForAdditionalWorkItem(int workItemId, int userId) {
+    private boolean userHasSpaceForAdditionalWorkItem(int workItemId, int userId) throws RepositoryException {
         // En User kan max ha 5 WorkItems samtidigt
-        try {
-            List<WorkItem> workItems = workItemRepository.getWorkItemsByUserId(userId);
-            for (WorkItem workItem : workItems) {
-                if (workItem.getId() == workItemId) {
-                    return true;
-                }
+        List<WorkItem> workItems = workItemRepository.getWorkItemsByUserId(userId);
+        for (WorkItem workItem : workItems) {
+            if (workItem.getId() == workItemId) {
+                return true;
             }
-            return workItems.size() < 5;
-
-        } catch (RepositoryException e) {
-            throw new ServiceException("Could not get workItems for user with id=" + userId, e);
         }
+        return workItems.size() < 5;
     }
 
     private boolean workItemIsDone(int workItemId) {
