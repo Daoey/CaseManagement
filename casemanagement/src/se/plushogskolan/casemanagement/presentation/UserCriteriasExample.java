@@ -33,7 +33,7 @@ public final class UserCriteriasExample {
     }
 
     private User createUser(int id, String username, String firstName, String lastName) {
-        return new User.UserBuilder().setActive(true).setFirstName(firstName).setLastName(lastName).build(id, username);
+        return User.builder().setActive(true).setFirstName(firstName).setLastName(lastName).build(id, username);
     }
 
     public void updateUser() {
