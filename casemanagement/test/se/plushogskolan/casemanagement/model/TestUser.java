@@ -43,16 +43,4 @@ public final class TestUser {
 
         assertNotEquals(twinUser1.hashCode(), brokenUser.hashCode());
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testUserIdRequirements() {
-        int negativeId = -1;
-        brokenUser = User.builder().build(negativeId, defaultUsername);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testUsernameRequirements() {
-        String toShortUsername = "<10char";
-        brokenUser = User.builder().build(defaultId, toShortUsername);
-    }
 }
