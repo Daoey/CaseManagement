@@ -8,7 +8,7 @@ import se.plushogskolan.casemanagement.model.WorkItem;
 import se.plushogskolan.casemanagement.model.WorkItem.Status;
 import se.plushogskolan.casemanagement.repository.WorkItemRepository;
 
-public class SqlWorkItemRepository implements WorkItemRepository {
+public final class SqlWorkItemRepository implements WorkItemRepository {
 
     private static final ResultMapper<WorkItem> WORK_ITEM_MAPPER = (r -> WorkItem.builder()
             .setId(Integer.parseInt(r.getString("idwork_item_table")))

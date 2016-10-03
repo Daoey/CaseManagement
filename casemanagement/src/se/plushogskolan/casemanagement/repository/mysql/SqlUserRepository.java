@@ -7,7 +7,7 @@ import se.plushogskolan.casemanagement.exception.RepositoryException;
 import se.plushogskolan.casemanagement.model.User;
 import se.plushogskolan.casemanagement.repository.UserRepository;
 
-public class SqlUserRepository implements UserRepository {
+public final class SqlUserRepository implements UserRepository {
 
     private final String url = "jdbc:mysql://localhost:3306/case_db?user=root&password=root&useSSL=false";
 
