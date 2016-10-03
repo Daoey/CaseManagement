@@ -41,29 +41,31 @@ public final class CaseService {
     public void saveUser(User user) {
         // En User måste ha ett användarnamn som är minst 10 tecken långt
         // Det får max vara 10 users i ett team
-        if (usernameLongEnough(user.getUsername()) && teamHasSpace(user.getId(), user.getTeamId())) {
-            try {
+        try {
+            if (usernameLongEnough(user.getUsername()) && teamHasSpace(user.getId(), user.getTeamId())) {
                 userRepository.saveUser(user);
-            } catch (RepositoryException e) {
-                throw new ServiceException("Could save User: " + user.toString(), e);
             }
+        } catch (RepositoryException e) {
+            throw new ServiceException("Could save User: " + user.toString(), e);
         }
     }
 
     public void updateUser(User newValues) {
         // En User måste ha ett användarnamn som är minst 10 tecken långt
         // Det får max vara 10 users i ett team
-        if (usernameLongEnough(newValues.getUsername()) && teamHasSpace(newValues.getId(), newValues.getTeamId())) {
-            try {
+        try {
+            if (usernameLongEnough(newValues.getUsername()) && teamHasSpace(newValues.getId(), newValues.getTeamId())) {
                 userRepository.updateUser(newValues);
-            } catch (RepositoryException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
             }
+        } catch (RepositoryException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
+
     }
 
-    public void inactivateUserById(int userId) { // TODO should be done with db-commit?
+    public void inactivateUserById(int userId) { // TODO should be done with
+        // db-commit?
         // När en User inaktiveras ändras status på alla dennes WorkItem
         // till Unstarted
         try {
@@ -74,10 +76,11 @@ public final class CaseService {
         }
     }
 
-    public void activateUserById(int userId) { // TODO should be done with db-commit?
+    public void activateUserById(int userId) { // TODO should be done with
+        // db-commit?
         try {
             userRepository.activateUserById(userId);
-            setStatusOfAllWorkItemsOfUserToUnstarted(userId);//TODO should set started?
+            setStatusOfAllWorkItemsOfUserToUnstarted(userId);// TODO should set started
         } catch (RepositoryException e) {
             throw new ServiceException("Could not activate User with id " + userId, e);
         }
@@ -151,13 +154,13 @@ public final class CaseService {
 
     public void addUserToTeam(int userId, int teamId) {
         // Det får max vara 10 users i ett team
-        if (teamHasSpace(userId, teamId)) {
-            try {
+        try {
+            if (teamHasSpace(userId, teamId)) {
                 teamRepository.addUserToTeam(userId, teamId);
-            } catch (RepositoryException e) {
-                throw new ServiceException(
-                        "Could not add User with id \"" + userId + "\" to Team with id \"" + teamId + "\".", e);
             }
+        } catch (RepositoryException e) {
+            throw new ServiceException(
+                    "Could not add User with id \"" + userId + "\" to Team with id \"" + teamId + "\".", e);
         }
     }
 
@@ -270,7 +273,7 @@ public final class CaseService {
         return username.length() >= 10;
     }
 
-    private boolean teamHasSpace(int userId, int teamId) {
+    private boolean teamHasSpace(int userId, int teamId) throws RepositoryException {
         // Det får max vara 10 users i ett team
         // throws Repository exception if no user by that id is found
         // which means that it is a save operation and not an update operation
@@ -279,28 +282,16 @@ public final class CaseService {
         if (teamId == 0) { // teamId = 0 means no specific team is set to User
             return true;
         }
-        try {
-            User user = userRepository.getUserById(userId);
-            if (user.getTeamId() == teamId) {
-                return true;
-            } else {
-                return numberOfUsersInTeamLessThanTen(teamId);
-            }
-        } catch (RepositoryException e) {
-            return numberOfUsersInTeamLessThanTen(teamId);
+        User user = userRepository.getUserById(userId);
+        if (user.getTeamId() == teamId) {
+            return true;
         }
+        return numberOfUsersInTeamLessThanTen(teamId);
     }
 
-    private boolean numberOfUsersInTeamLessThanTen(int teamId) {
+    private boolean numberOfUsersInTeamLessThanTen(int teamId) throws RepositoryException {
         List<User> users;
-        try {
-            users = userRepository.getUsersByTeamId(teamId);
-        } catch (RepositoryException e) {
-            throw new ServiceException("Could not numberOfUsersInTeamLessThanTen", e); // TODO
-                                                                                       // clarify
-                                                                                       // exception
-                                                                                       // message
-        }
+        users = userRepository.getUsersByTeamId(teamId);
         return users.size() < 10;
     }
 
