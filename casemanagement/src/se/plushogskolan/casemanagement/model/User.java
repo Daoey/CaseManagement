@@ -89,17 +89,7 @@ public final class User {
         public User build(int id, String username) {
             this.id = id;
             this.username = username;
-            checkIfValuesIsOk();
             return new User(id, isActive, teamId, username, firstName, lastName);
-        }
-
-        private void checkIfValuesIsOk() {
-            if (id < 0) {
-                throw new IllegalArgumentException("Invalid id. Only positive numbers is OK.");
-            }
-            if (username.length() < 10) {
-                throw new IllegalArgumentException("Invalid username. Username must be at least 10 characters long.");
-            }
         }
 
         public UserBuilder setTeamId(int teamId) {
