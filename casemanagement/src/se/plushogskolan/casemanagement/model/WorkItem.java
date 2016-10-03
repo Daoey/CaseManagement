@@ -66,7 +66,7 @@ public final class WorkItem {
         return status;
     }
 
-    public static class WorkItemBuilder {
+    public static final class WorkItemBuilder {
         private int id = 0;
         private int userId = 0;
         private String description = "";
