@@ -5,14 +5,13 @@ import java.util.List;
 
 import se.plushogskolan.casemanagement.exception.RepositoryException;
 import se.plushogskolan.casemanagement.model.User;
-import se.plushogskolan.casemanagement.model.User.UserBuilder;
 import se.plushogskolan.casemanagement.repository.UserRepository;
 
 public class SqlUserRepository implements UserRepository {
 
     private final String url = "jdbc:mysql://localhost:3306/case_db?user=root&password=root&useSSL=false";
 
-    private ResultMapper<User> userMapper = (u -> new UserBuilder().setFirstName(u.getString("first_name"))
+    private ResultMapper<User> userMapper = (u -> User.builder().setFirstName(u.getString("first_name"))
             .setLastName(u.getString("last_name")).setActive(u.getBoolean("active")).setTeamId(u.getInt("idteam"))
             .build(u.getInt("iduser_table"), u.getString("username")));
 

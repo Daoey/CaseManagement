@@ -13,12 +13,16 @@ public final class Team {
         this.name = name;
     }
 
+    public static TeamBuilder builder() {
+        return new TeamBuilder();
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + id;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + name.hashCode();
         return result;
     }
 
@@ -61,6 +65,10 @@ public final class Team {
         // Optional
         private int id = 0;
         private boolean active = true;
+
+        private TeamBuilder() {
+            super();
+        }
 
         public Team build(String name) {
             // Required name
