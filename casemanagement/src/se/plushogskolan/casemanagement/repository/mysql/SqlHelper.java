@@ -47,8 +47,7 @@ public final class SqlHelper {
 
             connection.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new SQLException();
+            throw new SQLException("Could not update database" , e);
         }
     }
 
@@ -79,10 +78,9 @@ public final class SqlHelper {
                 result.add(mapper.map(resultSet));
             }
             connection.commit();
-        } catch (SQLException e) {
-            throw new SQLException(e);
+            
+            if (result.isEmpty()) throw new SQLException("No result from statement: " + statement.toString());
         }
-
         return result;
     }
 
