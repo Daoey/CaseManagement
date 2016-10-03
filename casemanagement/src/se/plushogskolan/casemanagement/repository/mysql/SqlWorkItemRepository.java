@@ -58,7 +58,7 @@ public class SqlWorkItemRepository implements WorkItemRepository {
     @Override
     public void addWorkItemToUser(int workItemId, int userId) throws RepositoryException {
         try {
-            new SqlHelper(url).query("UPDATE work_item SET iduser = ? WHERE idwork_item_table = ?;")
+            new SqlHelper(url).query("UPDATE work_item_table SET iduser = ? WHERE idwork_item_table = ?;")
                 .parameter(userId)
                 .parameter(workItemId)
                 .update();
@@ -79,9 +79,15 @@ public class SqlWorkItemRepository implements WorkItemRepository {
     }
 
     @Override
-    public List<WorkItem> getWorkItemsByTeamId(int teamId) {
-        // TODO write method
-        return null;
+    public List<WorkItem> getWorkItemsByTeamId(int teamId) throws RepositoryException {
+        try {
+            return new SqlHelper(url).query("SELECT * FROM work_item_table WHERE iduser IN "
+                    + "(SELECT iduser_table FROM user_table WHERE idteam = ?);")
+                    .parameter(teamId)
+                    .many(WORK_ITEM_MAPPER);
+        } catch (SQLException e) {
+            throw new RepositoryException("Could not get Work Item by TeamId.", e);
+        }
     }
 
     @Override
@@ -96,9 +102,14 @@ public class SqlWorkItemRepository implements WorkItemRepository {
     }
 
     @Override
-    public List<WorkItem> getWorkItemsWithIssue() {
-        // TODO Auto-generated method stub
-        return null;
+    public List<WorkItem> getWorkItemsWithIssue() throws RepositoryException {
+        try {
+            return new SqlHelper(url).query("SELECT * FROM work_item_table WHERE idwork_item_table IN "
+                + "(SELECT idwork_item FROM issue_table);")
+                    .many(WORK_ITEM_MAPPER);
+        } catch (SQLException e) {
+            throw new RepositoryException("Could not get Work Items with Issues.", e);
+        }
     }
 
 }
