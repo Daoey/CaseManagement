@@ -1,4 +1,4 @@
-package se.plushogskolan.casemanagement.model.repository.mysql;
+package se.plushogskolan.casemanagement.repository.sql;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
