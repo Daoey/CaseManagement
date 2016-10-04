@@ -73,3 +73,5 @@ INSERT INTO `case_db`.`status_table`
 VALUES
 (3,
 'Unstarted');
+
+INSET INTO `case_db`.`user_table`
