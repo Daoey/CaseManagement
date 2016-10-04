@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import se.plushogskolan.casemanagement.exception.RepositoryException;
+import se.plushogskolan.casemanagement.mapper.ResultMapper;
 import se.plushogskolan.casemanagement.model.User;
 import se.plushogskolan.casemanagement.repository.UserRepository;
 
