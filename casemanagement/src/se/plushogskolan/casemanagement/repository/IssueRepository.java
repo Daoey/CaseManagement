@@ -9,7 +9,7 @@ public interface IssueRepository {
         
     void assignIssueToWorkItem(int issueId, int workItemId) throws RepositoryException;
     
-    void changeIssueDescription(int issueId, String description) throws RepositoryException;
+    void updateIssueDescription(int issueId, String description) throws RepositoryException;
     
     void deleteIssue(int issueId) throws RepositoryException;
     
