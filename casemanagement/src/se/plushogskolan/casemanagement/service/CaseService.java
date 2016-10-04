@@ -236,9 +236,6 @@ public final class CaseService {
     }
 
     public void saveIssue(Issue issue) {
-        // Ett Issue ska bara kunna läggas till work item som har status Done
-        // När en Issue läggs till en work item ändras status för workitem till
-        // Unstarted
         if (workItemIsDone(issue.getWorkItemId())) {
             try {
                 issueRepository.saveIssue(issue);
@@ -249,18 +246,25 @@ public final class CaseService {
         }
     }
 
-    public void updateIssue(Issue newValues) {
-        // Ett Issue ska bara kunna läggas till work item som har status
-        // Done
-        // När en Issue läggs till en work item ändras status för workitem
-        // till Unstarted
-        if (workItemIsDone(newValues.getWorkItemId())) {
+    public void updateIssueDescription(int issueId, String description) {
+        try {
+            issueRepository.updateIssueDescription(issueId, description);
+        } catch (RepositoryException e) {
+            throw new ServiceException("Could not change description of issue with id: " + issueId, e);
+        }
+    }
+
+    public void assignIssueToWorkItem(int issueId, int workItemId) {
+        // Ett Issue ska bara kunna läggas till work item som har status Done
+        // När en Issue läggs till en work item ändras status för workitem till
+        // Unstarted
+        if (workItemIsDone(workItemId)) {
             try {
-                issueRepository.updateIssue(newValues);
-                workItemRepository.updateStatusById(newValues.getWorkItemId(), WorkItem.Status.UNSTARTED);
+                issueRepository.assignIssueToWorkItem(issueId, workItemId);
+                workItemRepository.updateStatusById(workItemId, WorkItem.Status.UNSTARTED);
             } catch (RepositoryException e) {
-                throw new ServiceException("Could not update Issue with id " + newValues.getId() + " and new values "
-                        + newValues.toString(), e);
+                throw new ServiceException("Could not assign new work item to Issue with id " + issueId
+                        + " and work item id " + workItemId, e);
             }
         }
     }
@@ -271,8 +275,7 @@ public final class CaseService {
                     "Username must be at least 10 characters long. Username was " + user.getUsername());
         }
         if (user.getId() < 1) {
-            throw new ServiceException(
-                    "User id must be positive. User id was " + user.getId());
+            throw new ServiceException("User id must be positive. User id was " + user.getId());
         }
         if (!teamHasSpace(user.getId(), user.getTeamId())) {
             throw new ServiceException("User team is full. Team id " + user.getTeamId());
@@ -346,23 +349,23 @@ public final class CaseService {
         }
     }
 
-    //TODO should replace workItemIsDone
+    // TODO should replace workItemIsDone
     private boolean workItemIsDone2(int workItemId) {
-    	
-    	WorkItem workItem;
-    	try {
-    		workItem = workItemRepository.getWorkItemById(workItemId);
-    		return WorkItem.Status.DONE.equals(workItem.getStatus());
-    	} catch (RepositoryException e) {
-    		throw new ServiceException("Could not get WorkItem with id " + workItemId, e);
-    		
-    	}
+
+        WorkItem workItem;
+        try {
+            workItem = workItemRepository.getWorkItemById(workItemId);
+            return WorkItem.Status.DONE.equals(workItem.getStatus());
+        } catch (RepositoryException e) {
+            throw new ServiceException("Could not get WorkItem with id " + workItemId, e);
+
+        }
     }
 
     private void cleanRelatedDataOnWorkItemDelete(int workItemId) {
         // TODO Implement me
         try {
-            for (Issue issue: issueRepository.getIssuesByWorkItemId(workItemId))
+            for (Issue issue : issueRepository.getIssuesByWorkItemId(workItemId))
                 issueRepository.deleteIssue(issue.getId());
             workItemRepository.deleteWorkItem(workItemId);
         } catch (RepositoryException e) {
