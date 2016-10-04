@@ -7,7 +7,7 @@ import se.plushogskolan.casemanagement.exception.RepositoryException;
 import se.plushogskolan.casemanagement.model.User;
 import se.plushogskolan.casemanagement.repository.UserRepository;
 
-public class SqlUserRepository implements UserRepository {
+public final class SqlUserRepository implements UserRepository {
 
     private final String url = "jdbc:mysql://localhost:3306/case_db?user=root&password=root&useSSL=false";
 
@@ -25,7 +25,7 @@ public class SqlUserRepository implements UserRepository {
             new SqlHelper(url).query(query).parameter(user.getFirstName()).parameter(user.getLastName())
                     .parameter(user.getUsername()).parameter(user.isActive()).parameter(user.getTeamId()).update();
         } catch (SQLException e) {
-            throw new RepositoryException("Coulnt insert user with id: " + user.getId(), e);
+            throw new RepositoryException("Could not insert user with id: " + user.getId(), e);
         }
     }
 
@@ -41,7 +41,7 @@ public class SqlUserRepository implements UserRepository {
                     .parameter(newValues.getId()).update();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Couldnt update user with id: " + newValues.getId(), e);
+            throw new RepositoryException("Could not update user with id: " + newValues.getId(), e);
         }
 
     }
@@ -64,7 +64,7 @@ public class SqlUserRepository implements UserRepository {
             new SqlHelper(url).query(query).parameter(isActive).parameter(userId).update();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Couldnt set user " + userId + " active " + isActive, e);
+            throw new RepositoryException("Could not set user " + userId + " active " + isActive, e);
         }
 
     }
@@ -78,7 +78,7 @@ public class SqlUserRepository implements UserRepository {
             return new SqlHelper(url).query(query).parameter(userId).single(userMapper);
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RepositoryException("Couldnt get user with userId: " + userId, e);
+            throw new RepositoryException("Could not get user with userId: " + userId, e);
         }
     }
 
@@ -92,7 +92,7 @@ public class SqlUserRepository implements UserRepository {
             return new SqlHelper(url).query(query).parameter(firstName).parameter(lastName).parameter(username)
                     .many(userMapper);
         } catch (SQLException e) {
-            String exceptionMessage = String.format("Couldnt fetch Users from %s , %s , %s", firstName, lastName,
+            String exceptionMessage = String.format("Could not fetch Users from %s , %s , %s", firstName, lastName,
                     username);
             throw new RepositoryException(exceptionMessage, e);
         }
@@ -106,7 +106,7 @@ public class SqlUserRepository implements UserRepository {
         try {
             return new SqlHelper(url).query(query).parameter(teamId).many(userMapper);
         } catch (SQLException e) {
-            throw new RepositoryException("Couldnt get users by team id: " + teamId, e);
+            throw new RepositoryException("Could not get users by team id: " + teamId, e);
         }
     }
 }

@@ -19,7 +19,7 @@ public final class SqlTeamRepository implements TeamRepository {
         try {
             helper.query(query).parameter(team.getName()).parameter(team.isActive()).update();
         } catch (SQLException e) {
-            throw new RepositoryException("Could not save team: \"" + team.toString() + "\"", e);
+            throw new RepositoryException("Could not save team: " + team.toString(), e);
         }
     }
 
@@ -31,7 +31,7 @@ public final class SqlTeamRepository implements TeamRepository {
             helper.query(query).parameter(newValues.getName()).parameter(newValues.isActive())
                     .parameter(newValues.getId()).update();
         } catch (SQLException e) {
-            throw new RepositoryException("Could not update team with id: \"" + newValues.getId() + "\"", e);
+            throw new RepositoryException("Could not update team with id: " + newValues.getId(), e);
         }
     }
 
@@ -51,7 +51,7 @@ public final class SqlTeamRepository implements TeamRepository {
         try {
             helper.query(query).parameter(isActive).parameter(teamId).update();
         } catch (SQLException e) {
-            throw new RepositoryException("Could change active status on team with id: \"" + teamId + "\"", e);
+            throw new RepositoryException("Could change active status on team with id: " + teamId, e);
         }
     }
 
@@ -75,7 +75,7 @@ public final class SqlTeamRepository implements TeamRepository {
         try {
             helper.query(query).parameter(teamId).parameter(userId).update();
         } catch (SQLException e) {
-            throw new RepositoryException("Could not add User \"" + userId + "\" to Team \"" + teamId + "\".", e);
+            throw new RepositoryException("Could not add User with id " + userId + " to Team with id " + teamId, e);
         }
     }
 
