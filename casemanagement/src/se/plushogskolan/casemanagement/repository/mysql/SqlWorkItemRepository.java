@@ -106,12 +106,12 @@ public final class SqlWorkItemRepository implements WorkItemRepository {
     }
 
     @Override
-    public List<WorkItem> getWorkItemById(int workItemId) throws RepositoryException {
+    public WorkItem getWorkItemById(int workItemId) throws RepositoryException {
         try {
             return new SqlHelper(url)
-                    .query("SELECT * FROM work_item_table WHERE iduser IN "
-                            + "(SELECT iduser_table FROM user_table WHERE idteam = ?);")
-                    .parameter(workItemId).many(WORK_ITEM_MAPPER);
+                    .query("SELECT * FROM work_item_table WHERE iduser = ?;")
+                    .parameter(workItemId)
+                    .single(WORK_ITEM_MAPPER);
         } catch (SQLException e) {
             throw new RepositoryException("Could not get WorkItem by id " + workItemId, e);
         }

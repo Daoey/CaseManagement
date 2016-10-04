@@ -346,6 +346,19 @@ public final class CaseService {
         }
     }
 
+    //TODO should replace workItemIsDone
+    private boolean workItemIsDone2(int workItemId) {
+    	
+    	WorkItem workItem;
+    	try {
+    		workItem = workItemRepository.getWorkItemById(workItemId);
+    		return WorkItem.Status.DONE.equals(workItem.getStatus());
+    	} catch (RepositoryException e) {
+    		throw new ServiceException("Could not get WorkItem with id " + workItemId, e);
+    		
+    	}
+    }
+
     private void cleanRelatedDataOnWorkItemDelete(int workItemId) {
         // TODO Implement me
         try {

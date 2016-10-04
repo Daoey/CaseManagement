@@ -24,5 +24,5 @@ public interface WorkItemRepository {
  
     List<WorkItem> getWorkItemsWithIssue() throws RepositoryException;
     
-    List<WorkItem> getWorkItemById(int workItemId) throws RepositoryException;
+    WorkItem getWorkItemById(int workItemId) throws RepositoryException;
 }
