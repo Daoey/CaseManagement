@@ -341,7 +341,7 @@ public final class CaseService {
 
         WorkItem workItem;
         try {
-            workItem = workItemRepository.getWorkItemById(workItemId).get(0);
+            workItem = workItemRepository.getWorkItemById(workItemId);
             return WorkItem.Status.DONE.equals(workItem.getStatus());
         } catch (RepositoryException e) {
             throw new ServiceException("Could not get WorkItem with id " + workItemId, e);
