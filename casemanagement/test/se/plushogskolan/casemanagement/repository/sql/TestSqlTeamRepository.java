@@ -17,18 +17,22 @@ public final class TestSqlTeamRepository {
     }
 
     @Test
-    public void testUpdateTeam() throws RepositoryException {
+    public void saveTeam() throws RepositoryException {
     }
 
     @Test
-    public void testInactivateTeam() throws RepositoryException {
+    public void updateTeam() throws RepositoryException {
     }
 
     @Test
-    public void testGetAllTeams() throws RepositoryException {
+    public void inactivateTeam() throws RepositoryException {
     }
 
     @Test
-    public void testAddUserToTeam() throws RepositoryException {
+    public void getAllTeams() throws RepositoryException {
+    }
+
+    @Test
+    public void addUserToTeam() throws RepositoryException {
     }
 }
