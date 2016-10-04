@@ -12,21 +12,12 @@ public final class TestSqlTeamRepository {
     public void setUp() throws Exception {
     }
 
-    private void checkThatOurTeamNotAlreadyInDatabase() throws RepositoryException {
-    }
-
     @After
     public void cleanDatabase() throws RepositoryException {
     }
 
     @Test
     public void testUpdateTeam() throws RepositoryException {
-    }
-
-    private void getTestTeamFromDatabase() throws RepositoryException {
-    }
-
-    private void getTestTeamFromDatabaseWithNewName(String newName) throws RepositoryException {
     }
 
     @Test
