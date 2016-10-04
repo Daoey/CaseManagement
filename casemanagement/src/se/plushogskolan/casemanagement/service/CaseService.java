@@ -7,7 +7,6 @@ import se.plushogskolan.casemanagement.exception.ServiceException;
 import se.plushogskolan.casemanagement.model.Issue;
 import se.plushogskolan.casemanagement.model.Team;
 import se.plushogskolan.casemanagement.model.User;
-import se.plushogskolan.casemanagement.model.User.UserBuilder;
 import se.plushogskolan.casemanagement.model.WorkItem;
 import se.plushogskolan.casemanagement.repository.IssueRepository;
 import se.plushogskolan.casemanagement.repository.TeamRepository;
@@ -72,7 +71,9 @@ public final class CaseService {
                     .setTeamId(user.getTeamId()).setActive(user.isActive()).setUserId(user.getId())
                     .build(user.getUsername());
 
-            userRepository.updateUser(updatedUser);
+            if (userFillsRequirements(updatedUser)) {
+                userRepository.updateUser(updatedUser);
+            }
 
         } catch (RepositoryException e) {
             throw new ServiceException("Couldnt update user with first name: " + firstName, e);
@@ -86,10 +87,28 @@ public final class CaseService {
                     .setTeamId(user.getTeamId()).setActive(user.isActive()).setUserId(user.getId())
                     .build(user.getUsername());
 
-            userRepository.updateUser(updatedUser);
+            if (userFillsRequirements(updatedUser)) {
+                userRepository.updateUser(updatedUser);
+            }
 
         } catch (RepositoryException e) {
             throw new ServiceException("Couldnt update user with last name: " + lastName, e);
+        }
+    }
+
+    public void updateUserUsername(User user, String username) {
+
+        try {
+            User updatedUser = User.builder().setFirstName(user.getFirstName()).setLastName(user.getLastName())
+                    .setTeamId(user.getTeamId()).setActive(user.isActive()).setUserId(user.getId())
+                    .build(username);
+
+            if (userFillsRequirements(updatedUser)) {
+                userRepository.updateUser(updatedUser);
+            }
+
+        } catch (RepositoryException e) {
+            throw new ServiceException("Couldnt update user with username: " + username, e);
         }
     }
 
