@@ -7,6 +7,7 @@ import se.plushogskolan.casemanagement.exception.ServiceException;
 import se.plushogskolan.casemanagement.model.Issue;
 import se.plushogskolan.casemanagement.model.Team;
 import se.plushogskolan.casemanagement.model.User;
+import se.plushogskolan.casemanagement.model.User.UserBuilder;
 import se.plushogskolan.casemanagement.model.WorkItem;
 import se.plushogskolan.casemanagement.repository.IssueRepository;
 import se.plushogskolan.casemanagement.repository.TeamRepository;
@@ -61,6 +62,21 @@ public final class CaseService {
             throw new ServiceException("Could not update user " + newValues, e);
         }
 
+    }
+
+    // Uppstyckning av ovannämda funktion
+    public void updateUserFirstName(User user, String firstName) {
+
+        try {
+            User newUser = User.builder().setFirstName(firstName).setLastName(user.getLastName())
+                    .setTeamId(user.getTeamId()).setActive(user.isActive()).setUserId(user.getId())
+                    .build(user.getUsername());
+            
+            userRepository.updateUser(newUser);
+
+        } catch (RepositoryException e) {
+            throw new ServiceException("Couldnt not update user with first name: " + firstName, e);
+        }
     }
 
     public void inactivateUserById(int userId) { // TODO should be done with

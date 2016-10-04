@@ -14,7 +14,7 @@ public final class SqlUserRepository implements UserRepository {
 
     private ResultMapper<User> userMapper = (u -> User.builder().setFirstName(u.getString("first_name"))
             .setLastName(u.getString("last_name")).setActive(u.getBoolean("active")).setTeamId(u.getInt("idteam"))
-            .build(u.getInt("iduser_table"), u.getString("username")));
+            .setUserId(u.getInt("iduser_table")).build(u.getString("username")));
 
     @Override
     public void saveUser(User user) throws RepositoryException {
