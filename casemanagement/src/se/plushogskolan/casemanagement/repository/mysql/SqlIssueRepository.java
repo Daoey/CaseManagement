@@ -1,6 +1,7 @@
 package se.plushogskolan.casemanagement.repository.mysql;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import se.plushogskolan.casemanagement.exception.RepositoryException;
 import se.plushogskolan.casemanagement.model.Issue;
@@ -56,5 +57,11 @@ public final class SqlIssueRepository implements IssueRepository {
         }
 
     }
+
+	@Override
+	public List<Issue> getIssuesByWorkItemId(int workItemId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

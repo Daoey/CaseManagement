@@ -362,6 +362,8 @@ public final class CaseService {
     private void cleanRelatedDataOnWorkItemDelete(int workItemId) {
         // TODO Implement me
         try {
+            for (Issue issue: issueRepository.getIssuesByWorkItemId(workItemId))
+                issueRepository.deleteIssue(issue.getId());
             workItemRepository.deleteWorkItem(workItemId);
         } catch (RepositoryException e) {
             throw new ServiceException(
