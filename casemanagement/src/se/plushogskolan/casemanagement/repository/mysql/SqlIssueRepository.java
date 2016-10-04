@@ -46,4 +46,15 @@ public final class SqlIssueRepository implements IssueRepository {
         }
     }
 
+    @Override
+    public void deleteIssue(int issueId) throws RepositoryException {
+        String delete = "DELETE FROM issue_table WHERE idissue_table=?";
+        try {
+            new SqlHelper(url).query(delete).parameter(issueId).update();
+        } catch (SQLException e) {
+            throw new RepositoryException("Could not delete issue. issueId = " + issueId, e);
+        }
+
+    }
+
 }

@@ -11,4 +11,6 @@ public interface IssueRepository {
     
     void changeIssueDescription(int issueId, String description) throws RepositoryException;
     
+    void deleteIssue(int issueId) throws RepositoryException;
+    
 }
