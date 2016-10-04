@@ -74,4 +74,107 @@ VALUES
 (3,
 'Unstarted');
 
-INSET INTO `case_db`.`user_table`
+INSERT INTO `case_db`.`team_table`
+(`name`, `active`)
+VALUES
+('Team Rocket', 1);
+
+
+INSERT INTO `case_db`.`team_table`
+(`name`, `active`)
+VALUES
+('Team LMAULUL', 1);
+
+
+INSERT INTO `case_db`.`team_table`
+(`name`, `active`)
+VALUES
+('Team Instinct', 0);
+
+INSERT INTO `case_db`.`user_table`
+(`first_name`, `last_name`, `username`, `active`, `idteam`)
+VALUES
+('Per-Erik', 'Ferb', 'PeFerbtenletters', 1, 2);
+
+
+INSERT INTO `case_db`.`user_table`
+(`first_name`, `last_name`, `username`, `active`, `idteam`)
+VALUES
+('Joakim', 'Landstrom', 'joakimlandstrom', 1, 1);
+
+
+INSERT INTO `case_db`.`user_table`
+(`first_name`, `last_name`, `username`, `active`)
+VALUES
+('Rodrigo', 'Morales-Vega', 'xxxrodrigoxxxslayerz', 1);
+
+
+INSERT INTO `case_db`.`user_table`
+(`first_name`, `last_name`, `username`, `active`, `idteam`)
+VALUES
+('Johan', 'Åsling', 'daooooooey', 1, 1);
+
+
+INSERT INTO `case_db`.`user_table`
+(`first_name`, `last_name`, `username`, `active`)
+VALUES
+('Pelle', 'Chanslös', 'pellechanslos', 0);
+
+
+INSERT INTO `case_db`.`work_item_table` 
+(`description`, `idstatus`, `iduser`) 
+VALUES 
+('clean floors', '1', '1');
+
+INSERT INTO `case_db`.`work_item_table` 
+(`description`, `idstatus`, `iduser`) 
+VALUES 
+('Create team with issues', '2', '2');
+
+INSERT INTO `case_db`.`work_item_table` 
+(`description`, `idstatus`, `iduser`) 
+VALUES 
+('sad', '2', '1');
+
+INSERT INTO `case_db`.`work_item_table` 
+(`description`, `idstatus`, `iduser`) 
+VALUES 
+('Delete team with issues', '1', '3');
+
+INSERT INTO `case_db`.`work_item_table` 
+(`description`, `idstatus`, `iduser`) 
+VALUES 
+('Make git work', '1', '4');
+
+INSERT INTO `case_db`.`work_item_table` 
+(`description`, `idstatus`, `iduser`) 
+VALUES 
+('lmao lulu', '3', '4');
+
+INSERT INTO `case_db`.`work_item_table` 
+(`description`, `idstatus`, `iduser`) 
+VALUES 
+('gaimz', '1', '1');
+
+INSERT INTO `case_db`.`work_item_table` 
+(`description`, `idstatus`, `iduser`) 
+VALUES 
+('beer drinking', '3', '1');
+
+
+INSERT INTO `case_db`.`issue_table` 
+(`description`, `idwork_item`) 
+VALUES
+('Beer drinking not fast enough', '8');
+
+INSERT INTO `case_db`.`issue_table` 
+(`description`, `idwork_item`) 
+VALUES
+('Rodrigo is the issue', '1');
+
+INSERT INTO `case_db`.`issue_table` 
+(`description`, `idwork_item`) 
+VALUES
+('Wtf fix plox', '5');
+
+
