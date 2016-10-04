@@ -2,9 +2,9 @@ package se.plushogskolan.casemanagement.model;
 
 public final class User {
     // Required
-    private int id;
     private String username;
     // Optional
+    private int id;
     private int teamId;
     private boolean isActive;
     private String firstName;
@@ -82,9 +82,9 @@ public final class User {
 
     public static final class UserBuilder {
         // Required
-        private int id;
         private String username;
         // Optional
+        private int id = 0;
         private int teamId = 0;
         private boolean isActive = true;
         private String firstName = "";
@@ -94,10 +94,14 @@ public final class User {
             super();
         }
 
-        public User build(int id, String username) {
-            this.id = id;
+        public User build(String username) {
             this.username = username;
             return new User(id, isActive, teamId, username, firstName, lastName);
+        }
+
+        public UserBuilder setUserId(int userId) {
+            this.id = userId;
+            return this;
         }
 
         public UserBuilder setTeamId(int teamId) {
