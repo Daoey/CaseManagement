@@ -42,12 +42,23 @@ public final class CaseService {
         // En User måste ha ett användarnamn som är minst 10 tecken långt
         // Det får max vara 10 users i ett team
         try {
-            if (usernameLongEnough(user.getUsername()) && teamHasSpace(user.getId(), user.getTeamId())) {
+            if (userFillsRequirements(user)) {
                 userRepository.saveUser(user);
             }
         } catch (RepositoryException e) {
-            throw new ServiceException("Could save User: " + user.toString(), e);
+            throw new ServiceException("Could not save User: " + user.toString(), e);
         }
+    }
+
+    private boolean userFillsRequirements(User user) throws RepositoryException {
+        if (!usernameLongEnough(user.getUsername())) {
+            throw new ServiceException(
+                    "Username must be at least 10 characters long. Username was " + user.getUsername());
+        }
+        if (!teamHasSpace(user.getId(), user.getTeamId())) {
+            throw new ServiceException("User team is full. Team id " + user.getTeamId());
+        }
+        return true;
     }
 
     public void updateUser(User newValues) {
@@ -127,7 +138,7 @@ public final class CaseService {
         try {
             teamRepository.inactivateTeam(teamId);
         } catch (RepositoryException e) {
-            throw new ServiceException("Could not inactivate Team with id \"" + teamId + "\".", e);
+            throw new ServiceException("Could not inactivate Team with id \"" + teamId, e);
         }
     }
 
@@ -135,7 +146,7 @@ public final class CaseService {
         try {
             teamRepository.activateTeam(teamId);
         } catch (RepositoryException e) {
-            throw new ServiceException("Could not activate Team with id \"" + teamId + "\".", e);
+            throw new ServiceException("Could not activate Team with id \"" + teamId, e);
         }
     }
 
@@ -143,7 +154,7 @@ public final class CaseService {
         try {
             return teamRepository.getAllTeams();
         } catch (RepositoryException e) {
-            throw new ServiceException("Could not get all Team", e);
+            throw new ServiceException("Could not get all Teams", e);
         }
     }
 
@@ -184,7 +195,7 @@ public final class CaseService {
         try {
             workItemRepository.deleteWorkItem(workItemId);
             // Clean before or after delete?
-            cleanRelatedDataOnWorkItemDelete();
+            cleanRelatedDataOnWorkItemDelete(workItemId);
         } catch (RepositoryException e) {
             throw new ServiceException("Could not delete WorkItem with id: " + workItemId, e);
         }
@@ -193,13 +204,14 @@ public final class CaseService {
     public void addWorkItemToUser(int workItemId, int userId) {
         // En WorkItem kan inte tilldelas en User som är inaktiv
         // En User kan max ha 5 WorkItems samtidigt
-        if (userIsActive(userId) && userHasSpaceForAdditionalWorkItem(workItemId, userId)) {
-            try {
+        try {
+            if (userIsActive(userId) && userHasSpaceForAdditionalWorkItem(workItemId, userId)) {
                 workItemRepository.addWorkItemToUser(workItemId, userId);
-            } catch (RepositoryException e) {
-                throw new ServiceException("Could not add WorkItem " + workItemId + " to User " + userId, e);
             }
+        } catch (RepositoryException e) {
+            throw new ServiceException("Could not add WorkItem " + workItemId + " to User " + userId, e);
         }
+
     }
 
     public List<WorkItem> getWorkItemsByStatus(WorkItem.Status workItemStatus) {
@@ -307,31 +319,37 @@ public final class CaseService {
         return user.isActive();
     }
 
-    private boolean userHasSpaceForAdditionalWorkItem(int workItemId, int userId) {
+    private boolean userHasSpaceForAdditionalWorkItem(int workItemId, int userId) throws RepositoryException {
         // En User kan max ha 5 WorkItems samtidigt
-        try {
-            List<WorkItem> workItems = workItemRepository.getWorkItemsByUserId(userId);
-            for (WorkItem workItem : workItems) {
-                if (workItem.getId() == workItemId) {
-                    return true;
-                }
+        List<WorkItem> workItems = workItemRepository.getWorkItemsByUserId(userId);
+        for (WorkItem workItem : workItems) {
+            if (workItem.getId() == workItemId) {
+                return true;
             }
-            return workItems.size() < 5;
-
-        } catch (RepositoryException e) {
-            throw new ServiceException("Could not get workItems for user with id=" + userId, e);
         }
+        return workItems.size() < 5;
     }
 
     private boolean workItemIsDone(int workItemId) {
-        // TODO Implement me!
-        // Consider creating a method
-        // workItemRepository.getWorkItemById(workItemId);
-        return true;
+
+        WorkItem workItem;
+        try {
+            workItem = workItemRepository.getWorkItemById(workItemId).get(0);
+            return WorkItem.Status.DONE.equals(workItem.getStatus());
+        } catch (RepositoryException e) {
+            throw new ServiceException("Could not get WorkItem with id " + workItemId, e);
+
+        }
     }
 
-    private void cleanRelatedDataOnWorkItemDelete() {
+    private void cleanRelatedDataOnWorkItemDelete(int workItemId) {
         // TODO Implement me
+        try {
+            workItemRepository.deleteWorkItem(workItemId);
+        } catch (RepositoryException e) {
+            throw new ServiceException(
+                    "Could not clean data related to WorkItem " + workItemId + "when deleting WorkItem", e);
+        }
 
     }
 
