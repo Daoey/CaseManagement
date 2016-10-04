@@ -89,12 +89,22 @@ public final class User {
         private boolean isActive = true;
         private String firstName = "";
         private String lastName = "";
-        
+
         private UserBuilder() {
             super();
         }
 
         public User build(String username) {
+            this.username = username;
+            return new User(id, isActive, teamId, username, firstName, lastName);
+        }
+
+        /**
+         * Please use build(String username) instead.
+         */
+        @Deprecated
+        public User build(int userId, String username) {
+            this.id = userId;
             this.username = username;
             return new User(id, isActive, teamId, username, firstName, lastName);
         }
