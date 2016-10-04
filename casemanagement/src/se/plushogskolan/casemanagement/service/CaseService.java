@@ -68,14 +68,28 @@ public final class CaseService {
     public void updateUserFirstName(User user, String firstName) {
 
         try {
-            User newUser = User.builder().setFirstName(firstName).setLastName(user.getLastName())
+            User updatedUser = User.builder().setFirstName(firstName).setLastName(user.getLastName())
                     .setTeamId(user.getTeamId()).setActive(user.isActive()).setUserId(user.getId())
                     .build(user.getUsername());
-            
-            userRepository.updateUser(newUser);
+
+            userRepository.updateUser(updatedUser);
 
         } catch (RepositoryException e) {
-            throw new ServiceException("Couldnt not update user with first name: " + firstName, e);
+            throw new ServiceException("Couldnt update user with first name: " + firstName, e);
+        }
+    }
+
+    public void updateUserLastName(User user, String lastName) {
+
+        try {
+            User updatedUser = User.builder().setFirstName(user.getFirstName()).setLastName(lastName)
+                    .setTeamId(user.getTeamId()).setActive(user.isActive()).setUserId(user.getId())
+                    .build(user.getUsername());
+
+            userRepository.updateUser(updatedUser);
+
+        } catch (RepositoryException e) {
+            throw new ServiceException("Couldnt update user with last name: " + lastName, e);
         }
     }
 
