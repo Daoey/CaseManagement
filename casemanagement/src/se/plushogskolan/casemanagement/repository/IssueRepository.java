@@ -15,6 +15,6 @@ public interface IssueRepository {
     
     void deleteIssue(int issueId) throws RepositoryException;
 
-	List<Issue> getIssuesByWorkItemId(int workItemId);
+	List<Issue> getIssuesByWorkItemId(int workItemId) throws RepositoryException;
     
 }

@@ -9,6 +9,10 @@ import se.plushogskolan.casemanagement.repository.IssueRepository;
 
 public final class SqlIssueRepository implements IssueRepository {
 
+	private static final ResultMapper<Issue> ISSUE_MAPPER = (r -> Issue.builder(Integer.parseInt(r.getString("idwork_item")))
+			.setId(Integer.parseInt(r.getString("idissue_table")))
+			.setDescription(r.getString("description"))
+			.build());
     private final String url = "jdbc:mysql://localhost:3306/case_db?user=root&password=root&useSSL=false";
 
     @Override
@@ -59,9 +63,14 @@ public final class SqlIssueRepository implements IssueRepository {
     }
 
 	@Override
-	public List<Issue> getIssuesByWorkItemId(int workItemId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Issue> getIssuesByWorkItemId(int workItemId) throws RepositoryException {
+		try {
+			return new SqlHelper(url).query("SELECT * FROM issue_table WHERE idwork_item = ?;")
+				.parameter(workItemId)
+				.many(ISSUE_MAPPER);
+		} catch (SQLException e) {
+			throw new RepositoryException("Could not get Issues by WorkItemId. id = " + workItemId, e);
+		}
 	}
 
 }
