@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.plushogskolan.casemanagement.mapper.ResultMapper;
+
 public final class SqlHelper {
 
     private final String url;

@@ -1,4 +1,4 @@
-package se.plushogskolan.casemanagement.repository.mysql;
+package se.plushogskolan.casemanagement.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
