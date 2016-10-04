@@ -50,22 +50,11 @@ public final class CaseService {
         }
     }
 
-    private boolean userFillsRequirements(User user) throws RepositoryException {
-        if (!usernameLongEnough(user.getUsername())) {
-            throw new ServiceException(
-                    "Username must be at least 10 characters long. Username was " + user.getUsername());
-        }
-        if (!teamHasSpace(user.getId(), user.getTeamId())) {
-            throw new ServiceException("User team is full. Team id " + user.getTeamId());
-        }
-        return true;
-    }
-
     public void updateUser(User newValues) {
         // En User måste ha ett användarnamn som är minst 10 tecken långt
         // Det får max vara 10 users i ett team
         try {
-            if (usernameLongEnough(newValues.getUsername()) && teamHasSpace(newValues.getId(), newValues.getTeamId())) {
+            if (userFillsRequirements(newValues)) {
                 userRepository.updateUser(newValues);
             }
         } catch (RepositoryException e) {
@@ -274,6 +263,21 @@ public final class CaseService {
                         + newValues.toString(), e);
             }
         }
+    }
+
+    private boolean userFillsRequirements(User user) throws RepositoryException {
+        if (!usernameLongEnough(user.getUsername())) {
+            throw new ServiceException(
+                    "Username must be at least 10 characters long. Username was " + user.getUsername());
+        }
+        if (user.getId() < 1) {
+            throw new ServiceException(
+                    "User id must be positive. User id was " + user.getId());
+        }
+        if (!teamHasSpace(user.getId(), user.getTeamId())) {
+            throw new ServiceException("User team is full. Team id " + user.getTeamId());
+        }
+        return true;
     }
 
     private boolean usernameLongEnough(String username) {
