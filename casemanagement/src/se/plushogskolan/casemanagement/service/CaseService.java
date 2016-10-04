@@ -42,12 +42,23 @@ public final class CaseService {
         // En User måste ha ett användarnamn som är minst 10 tecken långt
         // Det får max vara 10 users i ett team
         try {
-            if (usernameLongEnough(user.getUsername()) && teamHasSpace(user.getId(), user.getTeamId())) {
+            if (userFillsRequirements(user)) {
                 userRepository.saveUser(user);
             }
         } catch (RepositoryException e) {
-            throw new ServiceException("Could save User: " + user.toString(), e);
+            throw new ServiceException("Could not save User: " + user.toString(), e);
         }
+    }
+
+    private boolean userFillsRequirements(User user) throws RepositoryException {
+        if (!usernameLongEnough(user.getUsername())) {
+            throw new ServiceException(
+                    "Username must be at least 10 characters long. Username was " + user.getUsername());
+        }
+        if (!teamHasSpace(user.getId(), user.getTeamId())) {
+            throw new ServiceException("User team is full. Team id " + user.getTeamId());
+        }
+        return true;
     }
 
     public void updateUser(User newValues) {
@@ -319,10 +330,10 @@ public final class CaseService {
 
     private boolean workItemIsDone(int workItemId) {
         try {
-            
+
             WorkItem workItem = workItemRepository.getWorkItemById(workItemId).get(0);
             return WorkItem.Status.DONE.equals(workItem.getStatus());
-            
+
         } catch (RepositoryException e) {
             throw new ServiceException("Could not get WorkItem with id " + workItemId, e);
         }
