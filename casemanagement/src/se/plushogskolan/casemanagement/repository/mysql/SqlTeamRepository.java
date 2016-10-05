@@ -38,15 +38,15 @@ public final class SqlTeamRepository implements TeamRepository {
 
     @Override
     public void inactivateTeam(int teamId) throws RepositoryException {
-        setTeamActive(teamId, false);
+        setTeamActiveStatus(teamId, false);
     }
 
     @Override
     public void activateTeam(int teamId) throws RepositoryException {
-        setTeamActive(teamId, true);
+        setTeamActiveStatus(teamId, true);
     }
     
-    private void setTeamActive(int teamId, boolean isActive) throws RepositoryException {
+    private void setTeamActiveStatus(int teamId, boolean isActive) throws RepositoryException {
         final String query = "UPDATE team_table SET active = ? WHERE idteam_table = ?;";
         SqlHelper helper = new SqlHelper(databaseUrl);
         try {
@@ -89,6 +89,27 @@ public final class SqlTeamRepository implements TeamRepository {
         } catch (SQLException e) {
             throw new RepositoryException("Could delete row with param matching teamName: \"" + teamName
                     + ", activeStatus: \"" + teamActiveStatus + "\". from in team_table in database.", e);
+        }
+    }
+    
+    public Team getTeamWithId(int teamId) throws RepositoryException {
+        final String query = "SELECT * FROM team_table WHERE idteam_table = ?;";
+        SqlHelper helper = new SqlHelper(databaseUrl);
+        try {
+            return helper.query(query).parameter(teamId).single(teamMapper);
+        } catch (SQLException e) {
+            throw new RepositoryException("Could get Team with id " + teamId, e);
+        }
+    }
+    
+    public boolean isTeamWithIdActive(int teamId) throws RepositoryException {
+        final String query = "SELECT * FROM team_table WHERE idteam_table = ?;";
+        SqlHelper helper = new SqlHelper(databaseUrl);
+        try {
+            Team team = helper.query(query).parameter(teamId).single(teamMapper);
+            return team.isActive();
+        } catch (SQLException e) {
+            throw new RepositoryException("Could find Team with id " + teamId, e);
         }
     }
 }
