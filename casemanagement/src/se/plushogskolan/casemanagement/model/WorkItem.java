@@ -96,6 +96,18 @@ public final class WorkItem {
             this.status = status;
             return this;
         }
+        
+        public WorkItemBuilder setStatus(int statusIndex) {
+        	switch(statusIndex) {
+        	case 1: this.status = Status.UNSTARTED;
+        		break;
+        	case 2: this.status = Status.STARTED;
+        		break;
+        	case 3: this.status = Status.DONE;
+        		break;
+        	}
+        	return this;
+        }
 
         public WorkItem build() {
             return new WorkItem(id, userId, description, status);

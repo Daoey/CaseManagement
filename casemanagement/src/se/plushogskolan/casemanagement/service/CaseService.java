@@ -50,6 +50,7 @@ public final class CaseService {
         }
     }
 
+    @Deprecated
     public void updateUser(User newValues) {
         // En User måste ha ett användarnamn som är minst 10 tecken långt
         // Det får max vara 10 users i ett team
@@ -64,12 +65,13 @@ public final class CaseService {
     }
 
     // Uppstyckning av ovannämda funktion
-    public void updateUserFirstName(User user, String firstName) {
+    public void updateUserFirstName(int userId, String firstName) {
 
         try {
-            User updatedUser = User.builder().setFirstName(firstName).setLastName(user.getLastName())
-                    .setTeamId(user.getTeamId()).setActive(user.isActive()).setId(user.getId())
-                    .build(user.getUsername());
+        	User userToUpdate = userRepository.getUserById(userId);
+        	User updatedUser = User.builder().setFirstName(firstName).setLastName(userToUpdate.getLastName())
+                    .setTeamId(userToUpdate.getTeamId()).setActive(userToUpdate.isActive()).setId(userToUpdate.getId())
+                    .build(userToUpdate.getUsername());
 
             if (userFillsRequirements(updatedUser)) {
                 userRepository.updateUser(updatedUser);
@@ -80,12 +82,13 @@ public final class CaseService {
         }
     }
 
-    public void updateUserLastName(User user, String lastName) {
+    public void updateUserLastName(int userId, String lastName) {
 
         try {
-            User updatedUser = User.builder().setFirstName(user.getFirstName()).setLastName(lastName)
-                    .setTeamId(user.getTeamId()).setActive(user.isActive()).setId(user.getId())
-                    .build(user.getUsername());
+        	User userToUpdate = userRepository.getUserById(userId);
+            User updatedUser = User.builder().setFirstName(userToUpdate.getFirstName()).setLastName(lastName)
+                    .setTeamId(userToUpdate.getTeamId()).setActive(userToUpdate.isActive()).setId(userToUpdate.getId())
+                    .build(userToUpdate.getUsername());
 
             if (userFillsRequirements(updatedUser)) {
                 userRepository.updateUser(updatedUser);
@@ -96,11 +99,12 @@ public final class CaseService {
         }
     }
 
-    public void updateUserUsername(User user, String username) {
+    public void updateUserUsername(int userId, String username) {
 
         try {
-            User updatedUser = User.builder().setFirstName(user.getFirstName()).setLastName(user.getLastName())
-                    .setTeamId(user.getTeamId()).setActive(user.isActive()).setId(user.getId())
+        	User userToUpdate = userRepository.getUserById(userId);
+            User updatedUser = User.builder().setFirstName(userToUpdate.getFirstName()).setLastName(userToUpdate.getLastName())
+                    .setTeamId(userToUpdate.getTeamId()).setActive(userToUpdate.isActive()).setId(userToUpdate.getId())
                     .build(username);
 
             if (userFillsRequirements(updatedUser)) {
@@ -231,7 +235,7 @@ public final class CaseService {
         // hur detta ska påverka
         // eventuellt relaterad data
         try {
-            workItemRepository.deleteWorkItem(workItemId);
+            workItemRepository.deleteWorkItemById(workItemId);
             // Clean before or after delete?
             cleanRelatedDataOnWorkItemDelete(workItemId);
         } catch (RepositoryException e) {
@@ -403,7 +407,7 @@ public final class CaseService {
         try {
             for (Issue issue : issueRepository.getIssuesByWorkItemId(workItemId))
                 issueRepository.deleteIssue(issue.getId());
-            workItemRepository.deleteWorkItem(workItemId);
+            workItemRepository.deleteWorkItemById(workItemId);
         } catch (RepositoryException e) {
             throw new ServiceException(
                     "Could not clean data related to WorkItem " + workItemId + "when deleting WorkItem", e);

@@ -12,7 +12,7 @@ public interface WorkItemRepository {
     void updateStatusById(int workItemId, WorkItem.Status workItemStatus) throws RepositoryException;
     
     //Save for last
-    void deleteWorkItem(int workItemId) throws RepositoryException;
+    void deleteWorkItemById(int workItemId) throws RepositoryException;
     
     void addWorkItemToUser(int workItemId, int userId) throws RepositoryException;
     

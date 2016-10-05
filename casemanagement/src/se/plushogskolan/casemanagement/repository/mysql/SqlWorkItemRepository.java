@@ -14,7 +14,8 @@ public final class SqlWorkItemRepository implements WorkItemRepository {
     private static final ResultMapper<WorkItem> WORK_ITEM_MAPPER = (r -> WorkItem.builder()
             .setId(Integer.parseInt(r.getString("idwork_item_table")))
             .setUserId(Integer.parseInt(r.getString("iduser")))
-            .setStatus(WorkItem.Status.valueOf(r.getString("idstatus"))).setDescription(r.getString("description"))
+            .setStatus(Integer.parseInt(r.getString("idstatus")))
+            .setDescription(r.getString("description"))
             .build());
     private final String url = "jdbc:mysql://localhost:3306/case_db?user=root&password=root&useSSL=false";
 
@@ -22,8 +23,10 @@ public final class SqlWorkItemRepository implements WorkItemRepository {
     public void saveWorkItem(WorkItem workItem) throws RepositoryException {
         try {
             new SqlHelper(url).query("INSERT INTO work_item_table (description, idstatus, iduser) VALUES (?,?,?);")
-                    .parameter(workItem.getDescription()).parameter(workItem.getStatus().toString())
-                    .parameter(workItem.getUserId()).update();
+                    .parameter(workItem.getDescription())
+                    .parameter(workItem.getStatus().ordinal() + 1)
+                    .parameter(workItem.getUserId())
+                    .update();
         } catch (SQLException e) {
             throw new RepositoryException("Could not save WorkItem: " + workItem.toString(), e);
         }
@@ -31,9 +34,12 @@ public final class SqlWorkItemRepository implements WorkItemRepository {
 
     @Override
     public void updateStatusById(int workItemId, Status workItemStatus) throws RepositoryException {
+    	int sqlIndex = workItemStatus.ordinal() + 1;
         try {
-            new SqlHelper(url).query("UPDATE work_item SET idstatus = ? WHERE idwork_item_table = ?;")
-                    .parameter(workItemStatus.ordinal()).parameter(workItemId).update();
+            new SqlHelper(url).query("UPDATE work_item_table SET idstatus = ? WHERE idwork_item_table = ?;")
+                    .parameter(sqlIndex)
+                    .parameter(workItemId)
+                    .update();
         } catch (SQLException e) {
             throw new RepositoryException(
                     "Could not update status on workItem with id " + workItemId + " to " + workItemStatus.toString(),
@@ -41,9 +47,8 @@ public final class SqlWorkItemRepository implements WorkItemRepository {
         }
     }
 
-    // TODO add work item secondary effects?
     @Override
-    public void deleteWorkItem(int workItemId) throws RepositoryException {
+    public void deleteWorkItemById(int workItemId) throws RepositoryException {
         try {
             new SqlHelper(url).query("DELETE FROM work_item_table WHERE idwork_item_table = ?;").parameter(workItemId)
                     .update();
@@ -65,9 +70,11 @@ public final class SqlWorkItemRepository implements WorkItemRepository {
 
     @Override
     public List<WorkItem> getWorkItemsByStatus(Status workItemStatus) throws RepositoryException {
+    	int sqlIndex = workItemStatus.ordinal() + 1;
         try {
             return new SqlHelper(url).query("SELECT * FROM work_item_table WHERE idstatus = ?;")
-                    .parameter(workItemStatus.ordinal()).many(WORK_ITEM_MAPPER);
+                    .parameter(sqlIndex)
+                    .many(WORK_ITEM_MAPPER);
         } catch (SQLException e) {
             throw new RepositoryException(
                     "Could not get Work Items by Status. Status asked for: " + workItemStatus.toString(), e);
@@ -110,7 +117,7 @@ public final class SqlWorkItemRepository implements WorkItemRepository {
     public WorkItem getWorkItemById(int workItemId) throws RepositoryException {
         try {
             return new SqlHelper(url)
-                    .query("SELECT * FROM work_item_table WHERE iduser = ?;")
+                    .query("SELECT * FROM work_item_table WHERE idwork_item_table = ?;")
                     .parameter(workItemId)
                     .single(WORK_ITEM_MAPPER);
         } catch (SQLException e) {
