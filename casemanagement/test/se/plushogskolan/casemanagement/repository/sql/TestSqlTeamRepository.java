@@ -44,10 +44,10 @@ public final class TestSqlTeamRepository {
     public void saveTeam() throws RepositoryException {
         teams = sqlTeamRepository.getAllTeams();
 
-        assertTrue(doesListContainTeamWithName(teams, testTeam.getName()));
+        assertTrue(listContainTeamWithName(teams, testTeam.getName()));
     }
 
-    private boolean doesListContainTeamWithName(List<Team> teams, String teamName) {
+    private boolean listContainTeamWithName(List<Team> teams, String teamName) {
         for (Team team : teams)
             if (teamName.equals(team.getName()))
                 return true;
@@ -119,13 +119,15 @@ public final class TestSqlTeamRepository {
     @Test
     public void getAllTeams() throws RepositoryException {
         teams = sqlTeamRepository.getAllTeams();
-
-        assertTrue(doesListContainTeamWithName(teams, testTeam.getName()));
-        assertTrue(doesListContainTeamWithName(teams, "Team Rocket"));
-        assertTrue(doesListContainTeamWithName(teams, "Team LMAULUL"));
-        assertTrue(doesListContainTeamWithName(teams, "Team Instinct"));
         
         assertEquals(4, teams.size());
+        
+        assertTrue(listContainTeamWithName(teams, testTeam.getName()));
+        
+        // Default Teams in test database
+        assertTrue(listContainTeamWithName(teams, "Team Rocket"));
+        assertTrue(listContainTeamWithName(teams, "Team LMAULUL"));
+        assertTrue(listContainTeamWithName(teams, "Team Instinct"));
     }
 
     @Test
