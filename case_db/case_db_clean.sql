@@ -10,7 +10,7 @@ CREATE TABLE `status_table` (
 
 CREATE TABLE `team_table` (
   `idteam_table` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) DEFAULT NULL,
+  `name` varchar(45) UNIQUE DEFAULT NULL,
   `active` tinyint(4) NOT NULL,
   PRIMARY KEY (`idteam_table`),
   UNIQUE KEY `idteam_table_UNIQUE` (`idteam_table`)
