@@ -35,6 +35,7 @@ public final class TestSqlTeamRepository {
 
     @After
     public void clean() throws RepositoryException {
+        sqlTeamRepository.removeTeamFromUserWithId(3);
         sqlTeamRepository.deleteFromDatabaseTeamWithNameAndActiveStatus(testTeam.getName(), true);
         sqlTeamRepository.deleteFromDatabaseTeamWithNameAndActiveStatus(testTeam.getName(), false);
         sqlTeamRepository.deleteFromDatabaseTeamWithNameAndActiveStatus(newTeamName, true);

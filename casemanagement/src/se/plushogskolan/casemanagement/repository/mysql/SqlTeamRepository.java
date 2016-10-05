@@ -112,4 +112,14 @@ public final class SqlTeamRepository implements TeamRepository {
             throw new RepositoryException("Could find Team with id " + teamId, e);
         }
     }
+
+    public void removeTeamFromUserWithId(int userId) throws RepositoryException {
+        final String query = "UPDATE user_table SET idteam = null WHERE iduser_table = ?;";
+        SqlHelper helper = new SqlHelper(databaseUrl);
+        try {
+            helper.query(query).parameter(userId).update();
+        } catch (SQLException e) {
+            throw new RepositoryException("Could not remove User with id " + userId, e);
+        }
+    }
 }
