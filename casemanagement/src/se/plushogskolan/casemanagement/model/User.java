@@ -81,8 +81,6 @@ public final class User {
     }
 
     public static final class UserBuilder {
-        // Required
-        private String username;
         // Optional
         private int id = 0;
         private int teamId = 0;
@@ -95,21 +93,11 @@ public final class User {
         }
 
         public User build(String username) {
-            this.username = username;
+            // Required username
             return new User(id, isActive, teamId, username, firstName, lastName);
         }
 
-        /**
-         * Please use build(String username) instead.
-         */
-        @Deprecated
-        public User build(int userId, String username) {
-            this.id = userId;
-            this.username = username;
-            return new User(id, isActive, teamId, username, firstName, lastName);
-        }
-
-        public UserBuilder setUserId(int userId) {
+        public UserBuilder setId(int userId) {
             this.id = userId;
             return this;
         }

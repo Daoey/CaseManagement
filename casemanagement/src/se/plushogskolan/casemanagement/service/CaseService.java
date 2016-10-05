@@ -68,7 +68,7 @@ public final class CaseService {
 
         try {
             User updatedUser = User.builder().setFirstName(firstName).setLastName(user.getLastName())
-                    .setTeamId(user.getTeamId()).setActive(user.isActive()).setUserId(user.getId())
+                    .setTeamId(user.getTeamId()).setActive(user.isActive()).setId(user.getId())
                     .build(user.getUsername());
 
             if (userFillsRequirements(updatedUser)) {
@@ -84,7 +84,7 @@ public final class CaseService {
 
         try {
             User updatedUser = User.builder().setFirstName(user.getFirstName()).setLastName(lastName)
-                    .setTeamId(user.getTeamId()).setActive(user.isActive()).setUserId(user.getId())
+                    .setTeamId(user.getTeamId()).setActive(user.isActive()).setId(user.getId())
                     .build(user.getUsername());
 
             if (userFillsRequirements(updatedUser)) {
@@ -100,7 +100,7 @@ public final class CaseService {
 
         try {
             User updatedUser = User.builder().setFirstName(user.getFirstName()).setLastName(user.getLastName())
-                    .setTeamId(user.getTeamId()).setActive(user.isActive()).setUserId(user.getId())
+                    .setTeamId(user.getTeamId()).setActive(user.isActive()).setId(user.getId())
                     .build(username);
 
             if (userFillsRequirements(updatedUser)) {

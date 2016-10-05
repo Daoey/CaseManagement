@@ -15,29 +15,31 @@ public final class TestUser {
 
     @Before
     public void setUp() throws Exception {
-        twinUser1 = User.builder().build(defaultId, defaultUsername);
-        twinUser2 = User.builder().build(defaultId, defaultUsername);
+        twinUser1 = User.builder().setId(defaultId).build(defaultUsername);
+        twinUser2 = User.builder().setId(defaultId).build(defaultUsername);
     }
 
     @Test
     public void testUserBuilder() {
-        User.builder().setActive(false).setFirstName("Per-Erik").setLastName("Ferb").setTeamId(666)
-                .build(defaultId, defaultUsername);
+        User.builder().setActive(false).setFirstName("Per-Erik").setLastName("Ferb").setTeamId(666).setId(defaultId)
+                .build(defaultUsername);
     }
 
     @Test
     public void testUserEquals() {
-        brokenUser = User.builder().build(defaultId, "Another username");
+        brokenUser = User.builder().setId(defaultId).build("Another username");
 
         assertEquals(twinUser1, twinUser2);
 
         assertNotEquals(twinUser1, brokenUser);
+
+        assertNotEquals(twinUser1, Team.builder().build("Not a User"));
     }
 
     @Test
     public void testUserHashCode() {
         int anotherId = 1002;
-        brokenUser = User.builder().build(anotherId, defaultUsername);
+        brokenUser = User.builder().setId(anotherId).build(defaultUsername);
 
         assertEquals(twinUser1.hashCode(), twinUser2.hashCode());
 

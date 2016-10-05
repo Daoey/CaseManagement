@@ -12,7 +12,6 @@ import org.junit.Test;
 public final class TestTeam {
     private final int defaultId = 1;
     private final String defaultName = "Regular ordinary team";
-    private final int anotherId = 13376;
     private final String anotherName = "We are unique!";
     private Team teamTwin1;
     private Team teamTwin2;
@@ -50,7 +49,7 @@ public final class TestTeam {
     @Test
     public void testTeamBuilder() {
         List<User> users = new ArrayList<>();
-        users.add(User.builder().build(1001, "long username"));
+        users.add(User.builder().setId(1001).build("long username"));
         Team.builder().setActive(false).build(defaultName);
     }
 }
