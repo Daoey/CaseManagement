@@ -19,8 +19,8 @@ public final class SqlUserRepository implements UserRepository {
     @Override
     public void saveUser(User user) throws RepositoryException {
 
-        String query = "insert into user_table set first_name=?, last_name=?, username=?, active=?, "
-                + "idteam = (select idteam_table from team_table where idteam_table = ?)";
+        String query = "INSERT INTO user_table SET first_name=?, last_name=?, username=?, active=?, "
+                + "idteam = (SELECT idteam_table FROM team_table WHERE idteam_table = ?)";
 
         try {
             new SqlHelper(url).query(query).parameter(user.getFirstName()).parameter(user.getLastName())
@@ -33,8 +33,8 @@ public final class SqlUserRepository implements UserRepository {
     @Override
     public void updateUser(User newValues) throws RepositoryException {
 
-        String query = "update user_table set first_name=?, last_name=?, username=?, active=?, "
-                + "idteam = (select idteam_table from team_table where idteam_table=?) where iduser_table = ?";
+        String query = "UPDATE user_table SET first_name=?, last_name=?, username=?, active=?, "
+                + "idteam = (SELECT idteam_table FROM team_table WHERE idteam_table=?) WHERE iduser_table = ?";
 
         try {
             new SqlHelper(url).query(query).parameter(newValues.getFirstName()).parameter(newValues.getLastName())
@@ -59,7 +59,7 @@ public final class SqlUserRepository implements UserRepository {
 
     private void setUserActive(int userId, boolean isActive) throws RepositoryException {
 
-        String query = "update user_table set active=? where iduser_table=?";
+        String query = "UPDATE user_table SET active=? WHERE iduser_table=?";
 
         try {
             new SqlHelper(url).query(query).parameter(isActive).parameter(userId).update();
@@ -72,8 +72,8 @@ public final class SqlUserRepository implements UserRepository {
 
     public User getUserById(int userId) throws RepositoryException {
 
-        String query = "select iduser_table, first_name, last_name, username, active, idteam from user_table "
-                + "where iduser_table = ?";
+        String query = "SELECT iduser_table, first_name, last_name, username, active, idteam FROM user_table "
+                + "WHERE iduser_table = ?";
 
         try {
             return new SqlHelper(url).query(query).parameter(userId).single(userMapper);
@@ -86,8 +86,8 @@ public final class SqlUserRepository implements UserRepository {
     @Override
     public List<User> getUserBy(String firstName, String lastName, String username) throws RepositoryException {
 
-        String query = "select * from user_table where instr(first_name, ?) > 0 and instr(last_name, ?) > 0 "
-                + "and instr(username, ?) > 0;";
+        String query = "SELECT * FROM user_table WHERE INSTR(first_name, ?) > 0 AND INSTR(last_name, ?) > 0 "
+                + "AND INSTR(username, ?) > 0;";
 
         try {
             return new SqlHelper(url).query(query).parameter(firstName).parameter(lastName).parameter(username)
@@ -102,7 +102,7 @@ public final class SqlUserRepository implements UserRepository {
     @Override
     public List<User> getUsersByTeamId(int teamId) throws RepositoryException {
 
-        String query = "select * from user_table where idteam = ?";
+        String query = "SELECT * FROM user_table WHERE idteam = ?";
 
         try {
             return new SqlHelper(url).query(query).parameter(teamId).many(userMapper);
