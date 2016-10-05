@@ -34,7 +34,7 @@ public final class SqlUserRepository implements UserRepository {
     public void updateUser(User newValues) throws RepositoryException {
 
         String query = "update user_table set first_name=?, last_name=?, username=?, active=?, "
-                + "idteam = (select idteam_table from team_table where idteam_table=?)" + "where iduser_table = ?";
+                + "idteam = (select idteam_table from team_table where idteam_table=?) where iduser_table = ?";
 
         try {
             new SqlHelper(url).query(query).parameter(newValues.getFirstName()).parameter(newValues.getLastName())
@@ -72,7 +72,7 @@ public final class SqlUserRepository implements UserRepository {
 
     public User getUserById(int userId) throws RepositoryException {
 
-        String query = "select iduser_table, first_name, last_name, username, active, idteam " + "from user_table "
+        String query = "select iduser_table, first_name, last_name, username, active, idteam from user_table "
                 + "where iduser_table = ?";
 
         try {
@@ -102,7 +102,7 @@ public final class SqlUserRepository implements UserRepository {
     @Override
     public List<User> getUsersByTeamId(int teamId) throws RepositoryException {
 
-        String query = "select * from user_table" + "where idteam = ?";
+        String query = "select * from user_table where idteam = ?";
 
         try {
             return new SqlHelper(url).query(query).parameter(teamId).many(userMapper);
