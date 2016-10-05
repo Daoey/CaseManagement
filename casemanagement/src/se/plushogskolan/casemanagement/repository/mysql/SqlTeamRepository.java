@@ -15,7 +15,7 @@ public final class SqlTeamRepository implements TeamRepository {
 
     @Override
     public void saveTeam(Team team) throws RepositoryException {
-        final String query = "insert into team_table (name, active) values (?, ?);";
+        final String query = "INSERT INTO team_table (name, active) VALUES (?, ?);";
         SqlHelper helper = new SqlHelper(databaseUrl);
         try {
             helper.query(query).parameter(team.getName()).parameter(team.isActive()).update();
@@ -58,7 +58,7 @@ public final class SqlTeamRepository implements TeamRepository {
 
     @Override
     public List<Team> getAllTeams() throws RepositoryException {
-        final String query = "select * from team_table";
+        final String query = "SELECT * FROM team_table";
         SqlHelper helper = new SqlHelper(databaseUrl);
         List<Team> teams;
         try {
@@ -82,7 +82,7 @@ public final class SqlTeamRepository implements TeamRepository {
 
     public void deleteFromDatabaseTeamWithNameAndStatus(String teamName, boolean teamActiveStatus)
             throws RepositoryException {
-        final String query = "delete from team_table where name = ? and active = ? limit 1;";
+        final String query = "DELETE FROM team_table WHERE name = ? AND active = ? LIMIT 1;";
         SqlHelper helper = new SqlHelper(databaseUrl);
         try {
             helper.query(query).parameter(teamName).parameter(teamActiveStatus).update();
