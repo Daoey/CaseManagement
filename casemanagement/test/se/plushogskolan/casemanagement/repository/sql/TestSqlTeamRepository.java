@@ -136,5 +136,14 @@ public final class TestSqlTeamRepository {
 
     @Test
     public void deleteTeamFromDatabase() throws RepositoryException {
+        teams = sqlTeamRepository.getAllTeams();
+
+        assertTrue(listContainTeamWithName(teams, testTeam.getName()));
+        
+        sqlTeamRepository.deleteFromDatabaseTeamWithNameAndActiveStatus(testTeam.getName(), testTeam.isActive());
+
+        teams = sqlTeamRepository.getAllTeams();
+        
+        assertFalse(listContainTeamWithName(teams, testTeam.getName()));
     }
 }
