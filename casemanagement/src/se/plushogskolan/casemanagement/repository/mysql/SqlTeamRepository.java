@@ -80,7 +80,7 @@ public final class SqlTeamRepository implements TeamRepository {
         }
     }
 
-    public void deleteFromDatabaseTeamWithNameAndStatus(String teamName, boolean teamActiveStatus)
+    public void deleteFromDatabaseTeamWithNameAndActiveStatus(String teamName, boolean teamActiveStatus)
             throws RepositoryException {
         final String query = "DELETE FROM team_table WHERE name = ? AND active = ? LIMIT 1;";
         SqlHelper helper = new SqlHelper(databaseUrl);
