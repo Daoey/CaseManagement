@@ -2,7 +2,6 @@ package se.plushogskolan.casemanagement.repository.sql;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -15,13 +14,14 @@ import se.plushogskolan.casemanagement.repository.mysql.SqlIssueRepository;
 public class TestSqlIssueRepository {
 
     private final int workItemId = 1;
-    private final String testDescription = "This string serves as a unique description";
     private final String tooLongDescription = "This string is too long for inserting in the database. "
             + "It will throw a repository exception upon insertion.";
     private final SqlIssueRepository issueRepository = new SqlIssueRepository();
-    
+
     @Test
-    public void saveAndDeleteIssue() throws RepositoryException {
+    public void saveDeleteAndGetIssueByWorkItemId() throws RepositoryException {
+        
+        String testDescription = "This string serves as a unique description";
 
         List<Issue> issuesBeforeSave = issueRepository.getIssuesByWorkItemId(workItemId);
 
@@ -43,65 +43,32 @@ public class TestSqlIssueRepository {
     }
 
     @Test
-    public void updateIssueDescription() throws RepositoryException {
-        String newDescription = "New issue description";
-
-        Issue tempIssue = Issue.builder(workItemId).setDescription(testDescription).build();
-        issueRepository.saveIssue(tempIssue);
-
-        List<Issue> issuesBeforeUpdatedDescription = issueRepository.getIssuesByWorkItemId(workItemId);
-        for (Issue issue : issuesBeforeUpdatedDescription) {
-            if (testDescription.equals(issue.getDescription())) {
-                issueRepository.updateIssueDescription(issue.getId(), newDescription);
-            }
-        }
-
-        List<Issue> issuesAfterUpdatedDescription = issueRepository.getIssuesByWorkItemId(workItemId);
-        boolean newDescriptionSetAndFound = false;
-        for (Issue issue : issuesAfterUpdatedDescription) {
-            if (newDescription.equals(issue.getDescription())) {
-                newDescriptionSetAndFound = true;
-                issueRepository.deleteIssue(issue.getId());
-            }
-        }
-        assertTrue(newDescriptionSetAndFound);
+    public void updateAndGetIssueById() throws RepositoryException {
+        int issueId = 1;
+        Issue issueBeforeUpdate = issueRepository.getIssueById(issueId);
+        Issue issueToBeUpdated = Issue.builder(2).setDescription("New description").setId(issueBeforeUpdate.getId())
+                .build();
+        issueRepository.updateIssue(issueToBeUpdated);
+        Issue issueAfterUpdate = issueRepository.getIssueById(issueId);
+        issueRepository.updateIssue(issueBeforeUpdate);
+        assertEquals(issueBeforeUpdate, issueRepository.getIssueById(issueId));
+        assertNotEquals(issueBeforeUpdate, issueAfterUpdate);
+        assertEquals("New description", issueAfterUpdate.getDescription());
+        assertEquals(1, issueAfterUpdate.getId());
+        assertEquals(2, issueAfterUpdate.getWorkItemId());
     }
 
-    @Test
-    public void assignNewWorkItemId() throws RepositoryException {
-        Issue tempIssue = Issue.builder(workItemId).setDescription(testDescription).build();
-        issueRepository.saveIssue(tempIssue);
+    @Test(expected = RepositoryException.class)
+    public void getIssueByIdInvalidId() throws RepositoryException {
+        int invalidIssueId = -1;
+        issueRepository.getIssueById(invalidIssueId);
+    }
 
-        int newWorkItemId = 5;
-        List<Issue> issuesWithStandardWorkItemId = issueRepository.getIssuesByWorkItemId(workItemId);
-        List<Issue> issuesWithNewWorkItemId = issueRepository.getIssuesByWorkItemId(newWorkItemId);
-
-        Issue afterSave = null;
-        for (Issue issue : issuesWithStandardWorkItemId) {
-            if (testDescription.equals(issue.getDescription())) {
-                afterSave = Issue.builder(issue.getWorkItemId()).setDescription(issue.getDescription())
-                        .setId(issue.getId()).build();
-                issueRepository.assignIssueToWorkItem(issue.getId(), newWorkItemId);
-            }
-        }
-
-        List<Issue> issuesWithStandardWorkItemIdAfterAssignment = issueRepository.getIssuesByWorkItemId(workItemId);
-        List<Issue> issuesWithNewWorkItemIdAfterAssignment = issueRepository.getIssuesByWorkItemId(newWorkItemId);
-
-        assertEquals(issuesWithStandardWorkItemIdAfterAssignment.size(), issuesWithStandardWorkItemId.size() - 1);
-        assertEquals(issuesWithNewWorkItemIdAfterAssignment.size(), issuesWithNewWorkItemId.size() + 1);
-
-        Issue tempIssueAfterReAssignment = null;
-        for (Issue issue : issuesWithNewWorkItemIdAfterAssignment) {
-            if (testDescription.equals(issue.getDescription())) {
-                tempIssueAfterReAssignment = issue;
-                issueRepository.deleteIssue(issue.getId());
-            }
-        }
-
-        assertEquals(afterSave.getId(), tempIssueAfterReAssignment.getId());
-        assertEquals(afterSave.getDescription(), tempIssueAfterReAssignment.getDescription());
-        assertNotEquals(afterSave.getWorkItemId(), tempIssueAfterReAssignment.getWorkItemId());
+    @Test(expected = RepositoryException.class)
+    public void updateWayTooLongDescription() throws RepositoryException {
+        int issueId = 1;
+        issueRepository
+                .updateIssue(Issue.builder(workItemId).setDescription(tooLongDescription).setId(issueId).build());
     }
 
     @Test(expected = RepositoryException.class)
@@ -113,16 +80,5 @@ public class TestSqlIssueRepository {
     public void getIssuesByWorkItemInvalidId() throws RepositoryException {
         int invalidWorkItemId = -1;
         issueRepository.getIssuesByWorkItemId(invalidWorkItemId);
-    }
-
-    @Test(expected = RepositoryException.class)
-    public void assignInvalidWorkItemId() throws RepositoryException {
-        int invalidWorkItemId = -1;
-        issueRepository.assignIssueToWorkItem(1, invalidWorkItemId);
-    }
-
-    @Test(expected = RepositoryException.class)
-    public void updateIssueDescriptionTooLongDescription() throws RepositoryException {
-        issueRepository.updateIssueDescription(1, tooLongDescription);
     }
 }

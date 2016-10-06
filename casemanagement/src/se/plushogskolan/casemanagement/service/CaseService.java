@@ -73,9 +73,7 @@ public final class CaseService {
                     .setTeamId(userToUpdate.getTeamId()).setActive(userToUpdate.isActive()).setId(userToUpdate.getId())
                     .build(userToUpdate.getUsername());
 
-            if (userFillsRequirements(updatedUser)) {
-                userRepository.updateUser(updatedUser);
-            }
+            userRepository.updateUser(updatedUser);
 
         } catch (RepositoryException e) {
             throw new ServiceException("Could not update user with id: " + userId + ", new first name: " + firstName,
@@ -91,9 +89,7 @@ public final class CaseService {
                     .setTeamId(userToUpdate.getTeamId()).setActive(userToUpdate.isActive()).setId(userToUpdate.getId())
                     .build(userToUpdate.getUsername());
 
-            if (userFillsRequirements(updatedUser)) {
-                userRepository.updateUser(updatedUser);
-            }
+            userRepository.updateUser(updatedUser);
 
         } catch (RepositoryException e) {
             throw new ServiceException("Could not update user with id: " + userId + ", new last name: " + lastName, e);
@@ -108,8 +104,10 @@ public final class CaseService {
                     .setLastName(userToUpdate.getLastName()).setTeamId(userToUpdate.getTeamId())
                     .setActive(userToUpdate.isActive()).setId(userToUpdate.getId()).build(username);
 
-            if (userFillsRequirements(updatedUser)) {
+            if (usernameLongEnough(username)) {
                 userRepository.updateUser(updatedUser);
+            } else {
+                throw new ServiceException("Username not long enough");
             }
 
         } catch (RepositoryException e) {
@@ -206,6 +204,8 @@ public final class CaseService {
         try {
             if (teamHasSpaceForUser(teamId, userId)) {
                 teamRepository.addUserToTeam(userId, teamId);
+            } else {
+                throw new ServiceException("No space in team for user. userId = " + userId + "teamId = " + teamId);
             }
         } catch (RepositoryException e) {
             throw new ServiceException(
@@ -250,6 +250,9 @@ public final class CaseService {
         try {
             if (userIsActive(userId) && userHasSpaceForAdditionalWorkItem(workItemId, userId)) {
                 workItemRepository.addWorkItemToUser(workItemId, userId);
+            } else {
+                throw new ServiceException("Could not add work item to user, "
+                        + "either user is inactive or there is no space for additional work items");
             }
         } catch (RepositoryException e) {
             throw new ServiceException("Could not add WorkItem " + workItemId + " to User " + userId, e);
@@ -290,19 +293,22 @@ public final class CaseService {
     }
 
     public void saveIssue(Issue issue) {
-        if (workItemIsDone(issue.getWorkItemId())) {
-            try {
+        try {
+            if (workItemIsDone(issue.getWorkItemId())) {
                 issueRepository.saveIssue(issue);
                 workItemRepository.updateStatusById(issue.getWorkItemId(), WorkItem.Status.UNSTARTED);
-            } catch (RepositoryException e) {
-                throw new ServiceException("Could not save Issue " + issue, e);
             }
+        } catch (RepositoryException e) {
+            throw new ServiceException("Could not save Issue " + issue, e);
         }
     }
 
     public void updateIssueDescription(int issueId, String description) {
         try {
-            issueRepository.updateIssueDescription(issueId, description);
+            Issue issueToUpdate = issueRepository.getIssueById(issueId);
+            Issue updatedIssue = Issue.builder(issueToUpdate.getWorkItemId()).setId(issueId).setDescription(description)
+                    .build();
+            issueRepository.updateIssue(updatedIssue);
         } catch (RepositoryException e) {
             throw new ServiceException("Could not change description of issue with id: " + issueId, e);
         }
@@ -312,14 +318,20 @@ public final class CaseService {
         // Ett Issue ska bara kunna läggas till work item som har status Done
         // När en Issue läggs till en work item ändras status för workitem till
         // Unstarted
-        if (workItemIsDone(workItemId)) {
-            try {
-                issueRepository.assignIssueToWorkItem(issueId, workItemId);
+        try {
+            if (workItemIsDone(workItemId)) {
+                Issue issueToUpdate = issueRepository.getIssueById(issueId);
+                Issue updatedIssue = Issue.builder(workItemId).setId(issueId)
+                        .setDescription(issueToUpdate.getDescription()).build();
+                issueRepository.updateIssue(updatedIssue);
                 workItemRepository.updateStatusById(workItemId, WorkItem.Status.UNSTARTED);
-            } catch (RepositoryException e) {
-                throw new ServiceException("Could not assign new work item to Issue with id " + issueId
-                        + " and work item id " + workItemId, e);
+            } else {
+                throw new ServiceException("WorkItem does not have status done");
             }
+        } catch (RepositoryException e) {
+            throw new ServiceException(
+                    "Could not assign new work item to Issue with id " + issueId + " and work item id " + workItemId,
+                    e);
         }
     }
 
@@ -355,8 +367,7 @@ public final class CaseService {
     }
 
     private boolean numberOfUsersInTeamLessThanTen(int teamId) throws RepositoryException {
-        List<User> users;
-        users = userRepository.getUsersByTeamId(teamId);
+        List<User> users = userRepository.getUsersByTeamId(teamId);
         return users.size() < 10;
     }
 
@@ -369,14 +380,9 @@ public final class CaseService {
         }
     }
 
-    private boolean userIsActive(int userId) {
+    private boolean userIsActive(int userId) throws RepositoryException {
         // En WorkItem kan inte tilldelas en User som är inaktiv
-        User user;
-        try {
-            user = userRepository.getUserById(userId);
-        } catch (RepositoryException e) {
-            throw new ServiceException("Can not get user with id " + userId, e);
-        }
+        User user = userRepository.getUserById(userId);
         return user.isActive();
     }
 
@@ -391,29 +397,15 @@ public final class CaseService {
         return workItems.size() < 5;
     }
 
-    private boolean workItemIsDone(int workItemId) {
+    private boolean workItemIsDone(int workItemId) throws RepositoryException {
 
-        WorkItem workItem;
-        try {
-            workItem = workItemRepository.getWorkItemById(workItemId);
-            return WorkItem.Status.DONE.equals(workItem.getStatus());
-        } catch (RepositoryException e) {
-            throw new ServiceException("Could not get WorkItem with id " + workItemId, e);
-
-        }
+        WorkItem workItem = workItemRepository.getWorkItemById(workItemId);
+        return WorkItem.Status.DONE.equals(workItem.getStatus());
     }
 
-    private void cleanRelatedDataOnWorkItemDelete(int workItemId) {
-        // TODO Implement me
-        try {
-            for (Issue issue : issueRepository.getIssuesByWorkItemId(workItemId))
-                issueRepository.deleteIssue(issue.getId());
-            workItemRepository.deleteWorkItemById(workItemId);
-        } catch (RepositoryException e) {
-            throw new ServiceException(
-                    "Could not clean data related to WorkItem " + workItemId + "when deleting WorkItem", e);
-        }
-
+    private void cleanRelatedDataOnWorkItemDelete(int workItemId) throws RepositoryException {
+        for (Issue issue : issueRepository.getIssuesByWorkItemId(workItemId))
+            issueRepository.deleteIssue(issue.getId());
     }
 
 }
