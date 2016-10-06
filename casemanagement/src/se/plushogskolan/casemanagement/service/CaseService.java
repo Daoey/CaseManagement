@@ -204,7 +204,7 @@ public final class CaseService {
     public void addUserToTeam(int userId, int teamId) {
         // Det får max vara 10 users i ett team
         try {
-            if (teamHasSpace(userId, teamId)) {
+            if (teamHasSpaceForUser(teamId, userId)) {
                 teamRepository.addUserToTeam(userId, teamId);
             }
         } catch (RepositoryException e) {
@@ -331,7 +331,7 @@ public final class CaseService {
         if (user.getId() < 1) {
             throw new ServiceException("User id must be positive. User id was " + user.getId());
         }
-        if (!teamHasSpace(user.getId(), user.getTeamId())) {
+        if (!teamHasSpaceForUser(user.getTeamId(), user.getId())) {
             throw new ServiceException("User team is full. Team id " + user.getTeamId());
         }
         return true;
@@ -343,21 +343,13 @@ public final class CaseService {
     }
 
     private boolean teamHasSpaceForUser(int teamId, int userId) throws RepositoryException {
-        return teamHasSpace(userId, teamId);
-    }
-
-    /** Use the above teamHasSpaceForUser(int teamId, int userId) instead. 
-     *  OBSERVE the reverted parameter order! */
-    // TODO Move logic to new method and delete deprecated method
-    @Deprecated
-    private boolean teamHasSpace(int userId, int teamId) throws RepositoryException {
         // Det får max vara 10 users i ett team
         if (teamId == 0) { // teamId = 0 means no specific team is set to User
             return true;
         }
         User user = userRepository.getUserById(userId);
         if (user.getTeamId() == teamId) {
-            return true;
+            return true;// User is already in Team
         }
         return numberOfUsersInTeamLessThanTen(teamId);
     }
