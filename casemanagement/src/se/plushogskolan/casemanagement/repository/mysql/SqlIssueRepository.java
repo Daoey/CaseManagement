@@ -30,25 +30,16 @@ public final class SqlIssueRepository implements IssueRepository {
     }
 
     @Override
-    public void assignIssueToWorkItem(int issueId, int workItemId) throws RepositoryException {
-        String update = "UPDATE issue_table SET idwork_item=? WHERE idissue_table=?";
-        try {
-            new SqlHelper(url).query(update).parameter(workItemId).parameter(issueId).update();
-        } catch (SQLException e) {
-            throw new RepositoryException(
-                    "Could not assign new work item id to issue. issueId = " + issueId + ", workItemId = " + workItemId,
-                    e);
-        }
-    }
-
-    @Override
-    public void updateIssueDescription(int issueId, String description) throws RepositoryException {
-        String update = "UPDATE issue_table SET description=? WHERE idissue_table=?";
-        try {
-            new SqlHelper(url).query(update).parameter(description).parameter(issueId).update();
-        } catch (SQLException e) {
-            throw new RepositoryException("Could not change issue description. issueId = " + issueId, e);
-        }
+    public void updateIssue(Issue newValues) throws RepositoryException {
+    	String update = "UPDATE issue_table SET description = ?, SET idwork_item = ? WHERE idissue_table = ?;";
+    	try {
+    		new SqlHelper(url).query(update).parameter(newValues.getDescription())
+    			.parameter(newValues.getWorkItemId())
+    			.parameter(newValues.getId())
+    			.update();
+    	} catch (SQLException e) {
+    		throw new RepositoryException("Could not update Issue with id " + newValues.getId(), e);
+    	}
     }
 
     @Override

@@ -302,7 +302,12 @@ public final class CaseService {
 
     public void updateIssueDescription(int issueId, String description) {
         try {
-            issueRepository.updateIssueDescription(issueId, description);
+        	Issue issueToUpdate = issueRepository.getIssueById(issueId);
+        	Issue updatedIssue = Issue.builder(issueToUpdate.getWorkItemId())
+        			.setId(issueId)
+        			.setDescription(description)
+        			.build();
+        	issueRepository.updateIssue(updatedIssue);
         } catch (RepositoryException e) {
             throw new ServiceException("Could not change description of issue with id: " + issueId, e);
         }
@@ -314,7 +319,12 @@ public final class CaseService {
         // Unstarted
         if (workItemIsDone(workItemId)) {
             try {
-                issueRepository.assignIssueToWorkItem(issueId, workItemId);
+            	Issue issueToUpdate = issueRepository.getIssueById(issueId);
+            	Issue updatedIssue = Issue.builder(workItemId)
+            			.setId(issueId)
+            			.setDescription(issueToUpdate.getDescription())
+            			.build();
+            	issueRepository.updateIssue(updatedIssue);
                 workItemRepository.updateStatusById(workItemId, WorkItem.Status.UNSTARTED);
             } catch (RepositoryException e) {
                 throw new ServiceException("Could not assign new work item to Issue with id " + issueId
