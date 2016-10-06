@@ -371,13 +371,12 @@ public final class CaseService {
 
     private boolean userIsActive(int userId) {
         // En WorkItem kan inte tilldelas en User som är inaktiv
-        User user;
         try {
-            user = userRepository.getUserById(userId);
+            User user = userRepository.getUserById(userId);
+            return user.isActive();
         } catch (RepositoryException e) {
             throw new ServiceException("Can not get user with id " + userId, e);
         }
-        return user.isActive();
     }
 
     private boolean userHasSpaceForAdditionalWorkItem(int workItemId, int userId) throws RepositoryException {
