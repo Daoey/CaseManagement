@@ -23,13 +23,13 @@ public final class User {
         return new UserBuilder();
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + id;
-        result = prime * result + ((username == null) ? 0 : username.hashCode());
-        return result;
+    public boolean isIdentical(Object other) {
+        if (!equals(other)) {
+            return false;
+        }
+        User otherUser = (User) other;
+        return firstName.equals(otherUser.firstName) && lastName.equals(otherUser.lastName)
+                && teamId == otherUser.teamId && isActive == otherUser.isActive;
     }
 
     @Override
@@ -48,6 +48,15 @@ public final class User {
             return id == otherUser.getId() && username.equals(otherUser.getUsername());
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + id;
+        result = prime * result + ((username == null) ? 0 : username.hashCode());
+        return result;
     }
 
     @Override
