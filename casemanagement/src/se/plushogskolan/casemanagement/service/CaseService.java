@@ -355,8 +355,7 @@ public final class CaseService {
     }
 
     private boolean numberOfUsersInTeamLessThanTen(int teamId) throws RepositoryException {
-        List<User> users;
-        users = userRepository.getUsersByTeamId(teamId);
+        List<User> users = userRepository.getUsersByTeamId(teamId);
         return users.size() < 10;
     }
 
