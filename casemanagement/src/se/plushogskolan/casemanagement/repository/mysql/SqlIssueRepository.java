@@ -31,15 +31,13 @@ public final class SqlIssueRepository implements IssueRepository {
 
     @Override
     public void updateIssue(Issue newValues) throws RepositoryException {
-    	String update = "UPDATE issue_table SET description = ?, SET idwork_item = ? WHERE idissue_table = ?;";
-    	try {
-    		new SqlHelper(url).query(update).parameter(newValues.getDescription())
-    			.parameter(newValues.getWorkItemId())
-    			.parameter(newValues.getId())
-    			.update();
-    	} catch (SQLException e) {
-    		throw new RepositoryException("Could not update Issue with id " + newValues.getId(), e);
-    	}
+        String update = "UPDATE issue_table SET description = ?, SET idwork_item = ? WHERE idissue_table = ?;";
+        try {
+            new SqlHelper(url).query(update).parameter(newValues.getDescription()).parameter(newValues.getWorkItemId())
+                    .parameter(newValues.getId()).update();
+        } catch (SQLException e) {
+            throw new RepositoryException("Could not update Issue with id " + newValues.getId(), e);
+        }
     }
 
     @Override
