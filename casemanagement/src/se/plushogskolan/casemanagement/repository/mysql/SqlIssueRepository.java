@@ -31,7 +31,7 @@ public final class SqlIssueRepository implements IssueRepository {
 
     @Override
     public void updateIssue(Issue newValues) throws RepositoryException {
-        String update = "UPDATE issue_table SET description = ?, SET idwork_item = ? WHERE idissue_table = ?;";
+        String update = "UPDATE issue_table SET description = ?, idwork_item = ? WHERE idissue_table = ?;";
         try {
             new SqlHelper(url).query(update).parameter(newValues.getDescription()).parameter(newValues.getWorkItemId())
                     .parameter(newValues.getId()).update();
