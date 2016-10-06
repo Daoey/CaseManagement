@@ -71,42 +71,47 @@ public final class WorkItem {
         private int userId = 0;
         private String description = "";
         private Status status = Status.UNSTARTED;
-        
-        //Empty private constructor to hide visibility
+
+        // Empty private constructor to hide visibility
         private WorkItemBuilder() {
             ;
         }
-        
+
         public WorkItemBuilder setId(int id) {
             this.id = id;
             return this;
         }
-        
+
         public WorkItemBuilder setUserId(int userId) {
             this.userId = userId;
             return this;
         }
-        
+
         public WorkItemBuilder setDescription(String description) {
             this.description = description;
             return this;
         }
-        
+
         public WorkItemBuilder setStatus(Status status) {
             this.status = status;
             return this;
         }
-        
+
         public WorkItemBuilder setStatus(int statusIndex) {
-        	switch(statusIndex) {
-        	case 1: this.status = Status.UNSTARTED;
-        		break;
-        	case 2: this.status = Status.STARTED;
-        		break;
-        	case 3: this.status = Status.DONE;
-        		break;
-        	}
-        	return this;
+            switch (statusIndex) {
+                case 1:
+                    this.status = Status.UNSTARTED;
+                    break;
+                case 2:
+                    this.status = Status.STARTED;
+                    break;
+                case 3:
+                    this.status = Status.DONE;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Status index can be 1, 2 or 3. Was " + statusIndex);
+            }
+            return this;
         }
 
         public WorkItem build() {

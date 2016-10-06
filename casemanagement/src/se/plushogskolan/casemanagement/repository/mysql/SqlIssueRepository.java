@@ -72,15 +72,14 @@ public final class SqlIssueRepository implements IssueRepository {
         }
     }
 
-	@Override
-	public Issue getIssueById(int issueId) throws RepositoryException {
-		String query = "SELECT * FROM issue_table WHERE idissue_table = ?;";
-		try {
-			return new SqlHelper(url).query(query).parameter(issueId)
-					.single(ISSUE_MAPPER);
-		} catch (SQLException e) {
-			throw new RepositoryException("Could not get Issue by IssueId " + issueId, e);
-		}
-	}
+    @Override
+    public Issue getIssueById(int issueId) throws RepositoryException {
+        String query = "SELECT * FROM issue_table WHERE idissue_table = ?;";
+        try {
+            return new SqlHelper(url).query(query).parameter(issueId).single(ISSUE_MAPPER);
+        } catch (SQLException e) {
+            throw new RepositoryException("Could not get Issue by IssueId " + issueId, e);
+        }
+    }
 
 }

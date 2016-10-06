@@ -68,8 +68,8 @@ public final class CaseService {
     public void updateUserFirstName(int userId, String firstName) {
 
         try {
-        	User userToUpdate = userRepository.getUserById(userId);
-        	User updatedUser = User.builder().setFirstName(firstName).setLastName(userToUpdate.getLastName())
+            User userToUpdate = userRepository.getUserById(userId);
+            User updatedUser = User.builder().setFirstName(firstName).setLastName(userToUpdate.getLastName())
                     .setTeamId(userToUpdate.getTeamId()).setActive(userToUpdate.isActive()).setId(userToUpdate.getId())
                     .build(userToUpdate.getUsername());
 
@@ -85,7 +85,7 @@ public final class CaseService {
     public void updateUserLastName(int userId, String lastName) {
 
         try {
-        	User userToUpdate = userRepository.getUserById(userId);
+            User userToUpdate = userRepository.getUserById(userId);
             User updatedUser = User.builder().setFirstName(userToUpdate.getFirstName()).setLastName(lastName)
                     .setTeamId(userToUpdate.getTeamId()).setActive(userToUpdate.isActive()).setId(userToUpdate.getId())
                     .build(userToUpdate.getUsername());
@@ -102,10 +102,10 @@ public final class CaseService {
     public void updateUserUsername(int userId, String username) {
 
         try {
-        	User userToUpdate = userRepository.getUserById(userId);
-            User updatedUser = User.builder().setFirstName(userToUpdate.getFirstName()).setLastName(userToUpdate.getLastName())
-                    .setTeamId(userToUpdate.getTeamId()).setActive(userToUpdate.isActive()).setId(userToUpdate.getId())
-                    .build(username);
+            User userToUpdate = userRepository.getUserById(userId);
+            User updatedUser = User.builder().setFirstName(userToUpdate.getFirstName())
+                    .setLastName(userToUpdate.getLastName()).setTeamId(userToUpdate.getTeamId())
+                    .setActive(userToUpdate.isActive()).setId(userToUpdate.getId()).build(username);
 
             if (userFillsRequirements(updatedUser)) {
                 userRepository.updateUser(updatedUser);

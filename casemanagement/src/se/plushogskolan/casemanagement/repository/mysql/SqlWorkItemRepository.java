@@ -13,20 +13,16 @@ public final class SqlWorkItemRepository implements WorkItemRepository {
 
     private static final ResultMapper<WorkItem> WORK_ITEM_MAPPER = (r -> WorkItem.builder()
             .setId(Integer.parseInt(r.getString("idwork_item_table")))
-            .setUserId(Integer.parseInt(r.getString("iduser")))
-            .setStatus(Integer.parseInt(r.getString("idstatus")))
-            .setDescription(r.getString("description"))
-            .build());
+            .setUserId(Integer.parseInt(r.getString("iduser"))).setStatus(Integer.parseInt(r.getString("idstatus")))
+            .setDescription(r.getString("description")).build());
     private final String url = "jdbc:mysql://localhost:3306/case_db?user=root&password=root&useSSL=false";
 
     @Override
     public void saveWorkItem(WorkItem workItem) throws RepositoryException {
         try {
             new SqlHelper(url).query("INSERT INTO work_item_table (description, idstatus, iduser) VALUES (?,?,?);")
-                    .parameter(workItem.getDescription())
-                    .parameter(workItem.getStatus().ordinal() + 1)
-                    .parameter(workItem.getUserId())
-                    .update();
+                    .parameter(workItem.getDescription()).parameter(workItem.getStatus().ordinal() + 1)
+                    .parameter(workItem.getUserId()).update();
         } catch (SQLException e) {
             throw new RepositoryException("Could not save WorkItem: " + workItem.toString(), e);
         }
@@ -34,12 +30,10 @@ public final class SqlWorkItemRepository implements WorkItemRepository {
 
     @Override
     public void updateStatusById(int workItemId, Status workItemStatus) throws RepositoryException {
-    	int sqlIndex = workItemStatus.ordinal() + 1;
+        int sqlIndex = workItemStatus.ordinal() + 1;
         try {
             new SqlHelper(url).query("UPDATE work_item_table SET idstatus = ? WHERE idwork_item_table = ?;")
-                    .parameter(sqlIndex)
-                    .parameter(workItemId)
-                    .update();
+                    .parameter(sqlIndex).parameter(workItemId).update();
         } catch (SQLException e) {
             throw new RepositoryException(
                     "Could not update status on workItem with id " + workItemId + " to " + workItemStatus.toString(),
@@ -70,10 +64,9 @@ public final class SqlWorkItemRepository implements WorkItemRepository {
 
     @Override
     public List<WorkItem> getWorkItemsByStatus(Status workItemStatus) throws RepositoryException {
-    	int sqlIndex = workItemStatus.ordinal() + 1;
+        int sqlIndex = workItemStatus.ordinal() + 1;
         try {
-            return new SqlHelper(url).query("SELECT * FROM work_item_table WHERE idstatus = ?;")
-                    .parameter(sqlIndex)
+            return new SqlHelper(url).query("SELECT * FROM work_item_table WHERE idstatus = ?;").parameter(sqlIndex)
                     .many(WORK_ITEM_MAPPER);
         } catch (SQLException e) {
             throw new RepositoryException(
@@ -116,10 +109,8 @@ public final class SqlWorkItemRepository implements WorkItemRepository {
     @Override
     public WorkItem getWorkItemById(int workItemId) throws RepositoryException {
         try {
-            return new SqlHelper(url)
-                    .query("SELECT * FROM work_item_table WHERE idwork_item_table = ?;")
-                    .parameter(workItemId)
-                    .single(WORK_ITEM_MAPPER);
+            return new SqlHelper(url).query("SELECT * FROM work_item_table WHERE idwork_item_table = ?;")
+                    .parameter(workItemId).single(WORK_ITEM_MAPPER);
         } catch (SQLException e) {
             throw new RepositoryException("Could not get WorkItem by id " + workItemId, e);
         }
