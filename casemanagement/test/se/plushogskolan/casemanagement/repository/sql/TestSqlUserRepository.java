@@ -1,9 +1,12 @@
 package se.plushogskolan.casemanagement.repository.sql;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -48,8 +51,19 @@ public class TestSqlUserRepository {
 
     }
     
+    
     @Test
     public void setUserActiveOrInactive() throws RepositoryException {
+        
+        User user = sqlUserRepository.getUserBy("", "", "joakimlandstrom").get(0);
+        
+        sqlUserRepository.activateUserById(user.getId());
+        
+        assertTrue(sqlUserRepository.getUserById(user.getId()).isActive());
+        
+        sqlUserRepository.inactivateUserById(user.getId());
+        
+        assertFalse(sqlUserRepository.getUserById(user.getId()).isActive());
         
     }
 
