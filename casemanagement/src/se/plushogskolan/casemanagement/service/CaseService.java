@@ -96,8 +96,7 @@ public final class CaseService {
             }
 
         } catch (RepositoryException e) {
-            throw new ServiceException("Could not update user with id: " + userId + ", new last name: " + lastName,
-                    e);
+            throw new ServiceException("Could not update user with id: " + userId + ", new last name: " + lastName, e);
         }
     }
 
@@ -114,8 +113,7 @@ public final class CaseService {
             }
 
         } catch (RepositoryException e) {
-            throw new ServiceException("Could not update user with id: " + userId + ", new username: " + username,
-                    e);
+            throw new ServiceException("Could not update user with id: " + userId + ", new username: " + username, e);
         }
     }
 
@@ -344,6 +342,14 @@ public final class CaseService {
         return username.length() >= 10;
     }
 
+    public boolean teamHasSpaceForUser(int teamId, int userId) throws RepositoryException {
+        return teamHasSpace(userId, teamId);
+    }
+
+    /** Use the above public teamHasSpaceForUser(int teamId, int userId) instead. 
+     *  OBSERVE the reverted parameter order! */
+    // TODO Move logic to new method and delete deprecated method
+    @Deprecated
     private boolean teamHasSpace(int userId, int teamId) throws RepositoryException {
         // Det får max vara 10 users i ett team
         if (teamId == 0) { // teamId = 0 means no specific team is set to User
