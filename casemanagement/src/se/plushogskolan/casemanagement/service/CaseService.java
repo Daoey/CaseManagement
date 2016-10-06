@@ -73,9 +73,7 @@ public final class CaseService {
                     .setTeamId(userToUpdate.getTeamId()).setActive(userToUpdate.isActive()).setId(userToUpdate.getId())
                     .build(userToUpdate.getUsername());
 
-            if (userFillsRequirements(updatedUser)) {
-                userRepository.updateUser(updatedUser);
-            }
+            userRepository.updateUser(updatedUser);
 
         } catch (RepositoryException e) {
             throw new ServiceException("Could not update user with id: " + userId + ", new first name: " + firstName,
@@ -91,9 +89,7 @@ public final class CaseService {
                     .setTeamId(userToUpdate.getTeamId()).setActive(userToUpdate.isActive()).setId(userToUpdate.getId())
                     .build(userToUpdate.getUsername());
 
-            if (userFillsRequirements(updatedUser)) {
-                userRepository.updateUser(updatedUser);
-            }
+            userRepository.updateUser(updatedUser);
 
         } catch (RepositoryException e) {
             throw new ServiceException("Could not update user with id: " + userId + ", new last name: " + lastName, e);
@@ -108,8 +104,10 @@ public final class CaseService {
                     .setLastName(userToUpdate.getLastName()).setTeamId(userToUpdate.getTeamId())
                     .setActive(userToUpdate.isActive()).setId(userToUpdate.getId()).build(username);
 
-            if (userFillsRequirements(updatedUser)) {
+            if (usernameLongEnough(username)) {
                 userRepository.updateUser(updatedUser);
+            } else {
+                throw new ServiceException("Username not long enough");
             }
 
         } catch (RepositoryException e) {
@@ -206,6 +204,8 @@ public final class CaseService {
         try {
             if (teamHasSpaceForUser(teamId, userId)) {
                 teamRepository.addUserToTeam(userId, teamId);
+            } else {
+                throw new ServiceException("No space in team for user. userId = " + userId + "teamId = " + teamId);
             }
         } catch (RepositoryException e) {
             throw new ServiceException(
@@ -250,6 +250,9 @@ public final class CaseService {
         try {
             if (userIsActive(userId) && userHasSpaceForAdditionalWorkItem(workItemId, userId)) {
                 workItemRepository.addWorkItemToUser(workItemId, userId);
+            } else {
+                throw new ServiceException("Could not add work item to user, "
+                        + "either user is inactive or there is no space for additional work items");
             }
         } catch (RepositoryException e) {
             throw new ServiceException("Could not add WorkItem " + workItemId + " to User " + userId, e);
@@ -322,6 +325,8 @@ public final class CaseService {
                         .setDescription(issueToUpdate.getDescription()).build();
                 issueRepository.updateIssue(updatedIssue);
                 workItemRepository.updateStatusById(workItemId, WorkItem.Status.UNSTARTED);
+            } else {
+                throw new ServiceException("WorkItem does not have status done");
             }
         } catch (RepositoryException e) {
             throw new ServiceException(
