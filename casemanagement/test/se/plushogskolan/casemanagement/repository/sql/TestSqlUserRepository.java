@@ -71,8 +71,13 @@ public class TestSqlUserRepository {
 
         int idTest = 1;
 
-        assertEquals(1, sqlUserRepository.getUserById(1).getId());
+        assertEquals(idTest, sqlUserRepository.getUserById(1).getId());
 
+    }
+    
+    @Test
+    public void getUserByFirstNameLastNameUsernameTest() throws RepositoryException {
+        
     }
 
 }
