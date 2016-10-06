@@ -50,21 +50,29 @@ public class TestSqlUserRepository {
         assertEquals(user.getFirstName(), sqlUserRepository.getUserById(user.getId()).getFirstName());
 
     }
-    
-    
+
     @Test
-    public void setUserActiveOrInactive() throws RepositoryException {
-        
+    public void setUserActiveOrInactiveTest() throws RepositoryException {
+
         User user = sqlUserRepository.getUserBy("", "", "joakimlandstrom").get(0);
-        
+
         sqlUserRepository.activateUserById(user.getId());
-        
+
         assertTrue(sqlUserRepository.getUserById(user.getId()).isActive());
-        
+
         sqlUserRepository.inactivateUserById(user.getId());
-        
+
         assertFalse(sqlUserRepository.getUserById(user.getId()).isActive());
-        
+
+    }
+
+    @Test
+    public void getUserByIdTest() throws RepositoryException {
+
+        int idTest = 1;
+
+        assertEquals(1, sqlUserRepository.getUserById(1).getId());
+
     }
 
 }
