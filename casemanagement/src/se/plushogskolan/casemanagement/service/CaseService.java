@@ -404,11 +404,9 @@ public final class CaseService {
     }
 
     private void cleanRelatedDataOnWorkItemDelete(int workItemId) {
-        // TODO Implement me
         try {
             for (Issue issue : issueRepository.getIssuesByWorkItemId(workItemId))
                 issueRepository.deleteIssue(issue.getId());
-            workItemRepository.deleteWorkItemById(workItemId);
         } catch (RepositoryException e) {
             throw new ServiceException(
                     "Could not clean data related to WorkItem " + workItemId + "when deleting WorkItem", e);
