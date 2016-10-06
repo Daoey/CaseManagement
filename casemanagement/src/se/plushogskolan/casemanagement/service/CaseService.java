@@ -78,7 +78,8 @@ public final class CaseService {
             }
 
         } catch (RepositoryException e) {
-            throw new ServiceException("Couldnt update user with first name: " + firstName, e);
+            throw new ServiceException("Could not update user with id: " + userId + ", new first name: " + firstName,
+                    e);
         }
     }
 
@@ -95,7 +96,8 @@ public final class CaseService {
             }
 
         } catch (RepositoryException e) {
-            throw new ServiceException("Couldnt update user with last name: " + lastName, e);
+            throw new ServiceException("Could not update user with id: " + userId + ", new last name: " + lastName,
+                    e);
         }
     }
 
@@ -112,7 +114,8 @@ public final class CaseService {
             }
 
         } catch (RepositoryException e) {
-            throw new ServiceException("Couldnt update user with username: " + username, e);
+            throw new ServiceException("Could not update user with id: " + userId + ", new username: " + username,
+                    e);
         }
     }
 
