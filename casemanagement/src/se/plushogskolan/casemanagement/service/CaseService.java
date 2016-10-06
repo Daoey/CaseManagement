@@ -342,11 +342,11 @@ public final class CaseService {
         return username.length() >= 10;
     }
 
-    public boolean teamHasSpaceForUser(int teamId, int userId) throws RepositoryException {
+    private boolean teamHasSpaceForUser(int teamId, int userId) throws RepositoryException {
         return teamHasSpace(userId, teamId);
     }
 
-    /** Use the above public teamHasSpaceForUser(int teamId, int userId) instead. 
+    /** Use the above teamHasSpaceForUser(int teamId, int userId) instead. 
      *  OBSERVE the reverted parameter order! */
     // TODO Move logic to new method and delete deprecated method
     @Deprecated
