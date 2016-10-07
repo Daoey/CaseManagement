@@ -143,7 +143,7 @@ public final class CaseService {
         }
     }
 
-    public List<User> getUserBy(String firstName, String lastName, String username) {
+    public List<User> searchUsersby(String firstName, String lastName, String username) {
         try {
             return userRepository.searchUsersBy(firstName, lastName, username);
         } catch (RepositoryException e) {
