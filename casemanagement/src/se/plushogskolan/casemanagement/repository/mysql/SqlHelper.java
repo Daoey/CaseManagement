@@ -63,7 +63,7 @@ public final class SqlHelper {
                 connection.commit();
                 return mapper.map(resultSet);
             } else {
-                throw new SQLException("No result from statement: " + statement.toString());
+                return null;
             }
         }
     }
@@ -81,7 +81,8 @@ public final class SqlHelper {
             }
             connection.commit();
             
-            if (result.isEmpty()) throw new SQLException("No result from statement: " + statement.toString());
+            if (result.isEmpty()) 
+                return null;
         }
         return result;
     }
