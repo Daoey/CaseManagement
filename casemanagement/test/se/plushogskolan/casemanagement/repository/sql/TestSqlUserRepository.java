@@ -42,7 +42,7 @@ public class TestSqlUserRepository {
 
         List<User> userList = sqlUserRepository.getUserBy("juan", "deag", "juandeagle");
         user = userList.get(0);
-        user = User.builder().setFirstName("joakim").setLastName(user.getLastName()).setId(user.getId())
+        user = User.builder().setFirstName("Joakim").setLastName(user.getLastName()).setId(user.getId())
                 .build(user.getUsername());
 
         sqlUserRepository.updateUser(user);
@@ -82,7 +82,7 @@ public class TestSqlUserRepository {
         
         assertEquals(5, list.size());
         
-        list = sqlUserRepository.getUserBy("joakim", "", "");
+        list = sqlUserRepository.getUserBy("Joak", "La", "");
         
         assertEquals(1, list.size());
         
