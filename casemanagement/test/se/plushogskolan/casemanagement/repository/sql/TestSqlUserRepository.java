@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -15,8 +16,8 @@ import se.plushogskolan.casemanagement.repository.mysql.SqlUserRepository;
 
 public class TestSqlUserRepository {
 
-    private static User user;
     private final SqlUserRepository sqlUserRepository = new SqlUserRepository();
+    private static User user;
 
     @BeforeClass
     public static void init() {
@@ -76,6 +77,8 @@ public class TestSqlUserRepository {
     
     @Test
     public void getUserByFirstNameLastNameUsernameTest() throws RepositoryException {
+        
+        
         
     }
 
