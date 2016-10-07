@@ -44,6 +44,8 @@ public final class CaseService {
         try {
             if (userFillsRequirements(user)) {
                 userRepository.saveUser(user);
+            } else {
+                throw new ServiceException("Username too short or team is full");
             }
         } catch (RepositoryException e) {
             throw new ServiceException("Could not save User: " + user.toString(), e);
@@ -339,11 +341,10 @@ public final class CaseService {
 
     private boolean userFillsRequirements(User user) throws RepositoryException {
         if (!usernameLongEnough(user.getUsername())) {
-            throw new ServiceException(
-                    "Username must be at least 10 characters long. Username was " + user.getUsername());
+            return false;
         }
         if (!teamHasSpaceForUser(user.getTeamId(), user.getId())) {
-            throw new ServiceException("User team is full. Team id " + user.getTeamId());
+            return false;
         }
         return true;
     }
