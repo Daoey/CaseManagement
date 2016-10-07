@@ -342,9 +342,6 @@ public final class CaseService {
             throw new ServiceException(
                     "Username must be at least 10 characters long. Username was " + user.getUsername());
         }
-        if (user.getId() < 1) {
-            throw new ServiceException("User id must be positive. User id was " + user.getId());
-        }
         if (!teamHasSpaceForUser(user.getTeamId(), user.getId())) {
             throw new ServiceException("User team is full. Team id " + user.getTeamId());
         }
