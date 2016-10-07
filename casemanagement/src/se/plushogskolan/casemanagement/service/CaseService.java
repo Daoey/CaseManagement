@@ -358,12 +358,6 @@ public final class CaseService {
         if (teamId == 0) { // teamId = 0 means no specific team is set to User
             return true;
         }
-        User user = userRepository.getUserById(userId);
-        if (user != null) {
-            if (user.getTeamId() == teamId) {
-                return true;// User is already in Team
-            }
-        }
         return numberOfUsersInTeamLessThanTen(teamId);
     }
 
