@@ -59,12 +59,6 @@ public class TestSqlIssueRepository {
     }
 
     @Test(expected = RepositoryException.class)
-    public void getIssueByIdInvalidId() throws RepositoryException {
-        int invalidIssueId = -1;
-        issueRepository.getIssueById(invalidIssueId);
-    }
-
-    @Test(expected = RepositoryException.class)
     public void updateWayTooLongDescription() throws RepositoryException {
         int issueId = 1;
         issueRepository
@@ -74,11 +68,5 @@ public class TestSqlIssueRepository {
     @Test(expected = RepositoryException.class)
     public void saveWayTooLongDescription() throws RepositoryException {
         issueRepository.saveIssue(Issue.builder(workItemId).setDescription(tooLongDescription).build());
-    }
-
-    @Test(expected = RepositoryException.class)
-    public void getIssuesByWorkItemInvalidId() throws RepositoryException {
-        int invalidWorkItemId = -1;
-        issueRepository.getIssuesByWorkItemId(invalidWorkItemId);
     }
 }
