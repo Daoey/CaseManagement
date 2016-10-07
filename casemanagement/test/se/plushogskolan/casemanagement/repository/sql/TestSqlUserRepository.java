@@ -74,18 +74,29 @@ public class TestSqlUserRepository {
         assertEquals(idTest, sqlUserRepository.getUserById(1).getId());
 
     }
-    
+
     @Test
     public void getUserByFirstNameLastNameUsernameTest() throws RepositoryException {
-        
+
         List<User> list = sqlUserRepository.getUserBy("", "", "");
-        
+
         assertEquals(5, list.size());
-        
+
         list = sqlUserRepository.getUserBy("Joak", "La", "");
-        
+
         assertEquals(1, list.size());
-        
+
+    }
+
+    @Test
+    public void getUserByTeamIdTest() throws RepositoryException {
+
+        List<User> teamList1 = sqlUserRepository.getUsersByTeamId(1);
+        List<User> teamList2 = sqlUserRepository.getUsersByTeamId(2);
+
+        assertEquals(2, teamList1.size());
+        assertEquals(1, teamList2.size());
+
     }
 
 }
