@@ -297,6 +297,8 @@ public final class CaseService {
             if (workItemIsDone(issue.getWorkItemId())) {
                 issueRepository.saveIssue(issue);
                 workItemRepository.updateStatusById(issue.getWorkItemId(), WorkItem.Status.UNSTARTED);
+            } else {
+                throw new ServiceException("WorkItem does not have status done");
             }
         } catch (RepositoryException e) {
             throw new ServiceException("Could not save Issue " + issue, e);
