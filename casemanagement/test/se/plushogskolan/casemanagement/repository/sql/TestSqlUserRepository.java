@@ -78,7 +78,13 @@ public class TestSqlUserRepository {
     @Test
     public void getUserByFirstNameLastNameUsernameTest() throws RepositoryException {
         
+        List<User> list = sqlUserRepository.getUserBy("", "", "");
         
+        assertEquals(5, list.size());
+        
+        list = sqlUserRepository.getUserBy("joakim", "", "");
+        
+        assertEquals(1, list.size());
         
     }
 
