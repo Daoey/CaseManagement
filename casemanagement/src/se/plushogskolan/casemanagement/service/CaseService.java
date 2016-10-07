@@ -359,8 +359,10 @@ public final class CaseService {
             return true;
         }
         User user = userRepository.getUserById(userId);
-        if (user.getTeamId() == teamId) {
-            return true;// User is already in Team
+        if (user != null) {
+            if (user.getTeamId() == teamId) {
+                return true;// User is already in Team
+            }
         }
         return numberOfUsersInTeamLessThanTen(teamId);
     }
