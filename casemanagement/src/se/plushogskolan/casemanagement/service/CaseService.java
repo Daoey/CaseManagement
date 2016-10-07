@@ -385,6 +385,10 @@ public final class CaseService {
     private boolean userHasSpaceForAdditionalWorkItem(int workItemId, int userId) throws RepositoryException {
         // En User kan max ha 5 WorkItems samtidigt
         List<WorkItem> workItems = workItemRepository.getWorkItemsByUserId(userId);
+        // workItems is null if no work items is assigned to user yet
+        if (workItems == null) {
+            return true;
+        }
         for (WorkItem workItem : workItems) {
             if (workItem.getId() == workItemId) {
                 return true;
