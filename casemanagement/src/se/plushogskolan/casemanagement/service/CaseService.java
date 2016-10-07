@@ -145,7 +145,7 @@ public final class CaseService {
 
     public List<User> getUserBy(String firstName, String lastName, String username) {
         try {
-            return userRepository.getUserBy(firstName, lastName, username);
+            return userRepository.searchUsersBy(firstName, lastName, username);
         } catch (RepositoryException e) {
             throw new ServiceException("Could not get User by first name, last name, username.", e);
         }

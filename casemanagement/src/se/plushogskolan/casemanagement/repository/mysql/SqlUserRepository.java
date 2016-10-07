@@ -84,7 +84,7 @@ public final class SqlUserRepository implements UserRepository {
     }
 
     @Override
-    public List<User> getUserBy(String firstName, String lastName, String username) throws RepositoryException {
+    public List<User> searchUsersBy(String firstName, String lastName, String username) throws RepositoryException {
 
         String query = "SELECT * FROM user_table WHERE INSTR(first_name, ?) > 0 AND INSTR(last_name, ?) > 0 "
                 + "AND INSTR(username, ?) > 0;";

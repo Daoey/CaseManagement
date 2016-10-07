@@ -29,7 +29,7 @@ public class TestSqlUserRepository {
 
         sqlUserRepository.saveUser(user);
 
-        List<User> userList = sqlUserRepository.getUserBy("juan", "deag", "juandeagle");
+        List<User> userList = sqlUserRepository.searchUsersBy("juan", "deag", "juandeagle");
 
         assertEquals(user.getUsername(), userList.get(0).getUsername());
         assertEquals(user.getFirstName(), userList.get(0).getFirstName());
@@ -39,7 +39,7 @@ public class TestSqlUserRepository {
     @Test
     public void updateUserTest() throws RepositoryException {
 
-        List<User> userList = sqlUserRepository.getUserBy("juan", "deag", "juandeagle");
+        List<User> userList = sqlUserRepository.searchUsersBy("juan", "deag", "juandeagle");
         user = userList.get(0);
         user = User.builder().setFirstName("Joakim").setLastName(user.getLastName()).setId(user.getId())
                 .build(user.getUsername());
@@ -53,7 +53,7 @@ public class TestSqlUserRepository {
     @Test
     public void setUserActiveOrInactiveTest() throws RepositoryException {
 
-        User user = sqlUserRepository.getUserBy("", "", "joakimlandstrom").get(0);
+        User user = sqlUserRepository.searchUsersBy("", "", "joakimlandstrom").get(0);
 
         sqlUserRepository.activateUserById(user.getId());
 
@@ -77,11 +77,11 @@ public class TestSqlUserRepository {
     @Test
     public void getUserByFirstNameLastNameUsernameTest() throws RepositoryException {
 
-        List<User> list = sqlUserRepository.getUserBy("", "", "");
+        List<User> list = sqlUserRepository.searchUsersBy("", "", "");
 
         assertEquals(5, list.size());
 
-        list = sqlUserRepository.getUserBy("Joak", "La", "");
+        list = sqlUserRepository.searchUsersBy("Joak", "La", "");
 
         assertEquals(1, list.size());
 

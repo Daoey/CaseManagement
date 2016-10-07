@@ -17,7 +17,7 @@ public interface UserRepository {
 
     User getUserById(int userId) throws RepositoryException;
 
-    List<User> getUserBy(String firstName, String lastName, String username) throws RepositoryException;
+    List<User> searchUsersBy(String firstName, String lastName, String username) throws RepositoryException;
 
     List<User> getUsersByTeamId(int teamId) throws RepositoryException;
 
