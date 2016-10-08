@@ -52,21 +52,6 @@ public final class CaseService {
         }
     }
 
-    @Deprecated
-    public void updateUser(User newValues) {
-        // En User måste ha ett användarnamn som är minst 10 tecken långt
-        // Det får max vara 10 users i ett team
-        try {
-            if (userFillsRequirements(newValues)) {
-                userRepository.updateUser(newValues);
-            }
-        } catch (RepositoryException e) {
-            throw new ServiceException("Could not update user " + newValues, e);
-        }
-
-    }
-
-    // Uppstyckning av ovannämda funktion
     public void updateUserFirstName(int userId, String firstName) {
 
         try {
@@ -369,8 +354,7 @@ public final class CaseService {
 
     private void setStatusOfAllWorkItemsOfUserToUnstarted(int userId) throws RepositoryException {
         // När en User inaktiveras ändras status på alla dennes WorkItem
-        List<WorkItem> workItems;
-        workItems = workItemRepository.getWorkItemsByUserId(userId);
+        List<WorkItem> workItems = workItemRepository.getWorkItemsByUserId(userId);
         for (WorkItem workItem : workItems) {
             workItemRepository.updateStatusById(workItem.getId(), WorkItem.Status.UNSTARTED);
         }
@@ -398,7 +382,6 @@ public final class CaseService {
     }
 
     private boolean workItemIsDone(int workItemId) throws RepositoryException {
-
         WorkItem workItem = workItemRepository.getWorkItemById(workItemId);
         return WorkItem.Status.DONE.equals(workItem.getStatus());
     }
