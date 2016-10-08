@@ -13,16 +13,6 @@ import se.plushogskolan.casemanagement.repository.TeamRepository;
 import se.plushogskolan.casemanagement.repository.UserRepository;
 import se.plushogskolan.casemanagement.repository.WorkItemRepository;
 
-/**
- * - En User måste ha ett användarnamn som är minst 10 tecken långt. - När en
- * User inaktivares ändras status på alla dennes WorkItem till Unstarted - Det
- * får max vara 10 users i ett team - En User kan bara ingå i ett team åt gången
- * - En WorkItem kan inte tilldelas en User som är inaktiv - En User kan max ha
- * 5 WorkItems samtidigt - Ett Issue ska bara kunna läggas till work item som
- * har status Done - När en Issue läggs till en work item ändras status för
- * workitem till Unstarted
- */
-
 public final class CaseService {
 
     private final UserRepository userRepository;
@@ -39,8 +29,7 @@ public final class CaseService {
     }
 
     public void saveUser(User user) {
-        // En User måste ha ett användarnamn som är minst 10 tecken långt
-        // Det får max vara 10 users i ett team
+
         try {
             if (userFillsRequirements(user)) {
                 userRepository.saveUser(user);
@@ -103,9 +92,7 @@ public final class CaseService {
     }
 
     public void inactivateUserById(int userId) { // TODO should be done with
-        // db-commit?
-        // När en User inaktiveras ändras status på alla dennes WorkItem
-        // till Unstarted
+
         try {
             userRepository.inactivateUserById(userId);
             setStatusOfAllWorkItemsOfUserToUnstarted(userId);
@@ -187,7 +174,6 @@ public final class CaseService {
     }
 
     public void addUserToTeam(int userId, int teamId) {
-        // Det får max vara 10 users i ett team
         try {
             if (teamHasSpaceForUser(teamId, userId)) {
                 teamRepository.addUserToTeam(userId, teamId);
@@ -217,14 +203,11 @@ public final class CaseService {
         }
     }
 
-    // Save for last
     public void deleteWorkItem(int workItemId) {
-        // När ni tar bort något (exempelvis en WorkItem) behöver ni fundera på
-        // hur detta ska påverka
-        // eventuellt relaterad data
+
         try {
             workItemRepository.deleteWorkItemById(workItemId);
-            // Clean before or after delete?
+
             cleanRelatedDataOnWorkItemDelete(workItemId);
         } catch (RepositoryException e) {
             throw new ServiceException("Could not delete WorkItem with id: " + workItemId, e);
@@ -232,8 +215,7 @@ public final class CaseService {
     }
 
     public void addWorkItemToUser(int workItemId, int userId) {
-        // En WorkItem kan inte tilldelas en User som är inaktiv
-        // En User kan max ha 5 WorkItems samtidigt
+
         try {
             if (userIsActive(userId) && userHasSpaceForAdditionalWorkItem(workItemId, userId)) {
                 workItemRepository.addWorkItemToUser(workItemId, userId);
@@ -304,9 +286,7 @@ public final class CaseService {
     }
 
     public void assignIssueToWorkItem(int issueId, int workItemId) {
-        // Ett Issue ska bara kunna läggas till work item som har status Done
-        // När en Issue läggs till en work item ändras status för workitem till
-        // Unstarted
+
         try {
             if (workItemIsDone(workItemId)) {
                 Issue issueToUpdate = issueRepository.getIssueById(issueId);
@@ -335,13 +315,13 @@ public final class CaseService {
     }
 
     private boolean usernameLongEnough(String username) {
-        // En User måste ha ett användarnamn som är minst 10 tecken långt
+
         return username.length() >= 10;
     }
 
     private boolean teamHasSpaceForUser(int teamId, int userId) throws RepositoryException {
-        // Det får max vara 10 users i ett team
-        if (teamId == 0) { // teamId = 0 means no specific team is set to User
+
+        if (teamId == 0) {
             return true;
         }
         return numberOfUsersInTeamLessThanTen(teamId);
@@ -353,7 +333,7 @@ public final class CaseService {
     }
 
     private void setStatusOfAllWorkItemsOfUserToUnstarted(int userId) throws RepositoryException {
-        // När en User inaktiveras ändras status på alla dennes WorkItem
+
         List<WorkItem> workItems = workItemRepository.getWorkItemsByUserId(userId);
         for (WorkItem workItem : workItems) {
             workItemRepository.updateStatusById(workItem.getId(), WorkItem.Status.UNSTARTED);
@@ -361,15 +341,15 @@ public final class CaseService {
     }
 
     private boolean userIsActive(int userId) throws RepositoryException {
-        // En WorkItem kan inte tilldelas en User som är inaktiv
+
         User user = userRepository.getUserById(userId);
         return user.isActive();
     }
 
     private boolean userHasSpaceForAdditionalWorkItem(int workItemId, int userId) throws RepositoryException {
-        // En User kan max ha 5 WorkItems samtidigt
+
         List<WorkItem> workItems = workItemRepository.getWorkItemsByUserId(userId);
-        // workItems is null if no work items is assigned to user yet
+
         if (workItems == null) {
             return true;
         }
