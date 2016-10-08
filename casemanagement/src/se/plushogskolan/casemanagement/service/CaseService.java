@@ -91,7 +91,7 @@ public final class CaseService {
         }
     }
 
-    public void inactivateUserById(int userId) { // TODO should be done with
+    public void inactivateUserById(int userId) {
 
         try {
             userRepository.inactivateUserById(userId);
