@@ -34,7 +34,7 @@ public final class SqlUserRepository implements UserRepository {
     public void updateUser(User newValues) throws RepositoryException {
 
         String query = "UPDATE user_table SET first_name=?, last_name=?, username=?, active=?, "
-                + "idteam = (SELECT idteam_table FROM team_table WHERE idteam_table=?) WHERE iduser_table = ?";
+                + "idteam = ?  WHERE iduser_table = ?";
 
         try {
             new SqlHelper(url).query(query).parameter(newValues.getFirstName()).parameter(newValues.getLastName())
