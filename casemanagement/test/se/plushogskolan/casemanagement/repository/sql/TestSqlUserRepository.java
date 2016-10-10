@@ -15,8 +15,8 @@ import se.plushogskolan.casemanagement.repository.mysql.SqlUserRepository;
 
 public class TestSqlUserRepository {
 
-    private final SqlUserRepository sqlUserRepository = new SqlUserRepository();
     private static User user;
+    private final SqlUserRepository sqlUserRepository = new SqlUserRepository();
 
     @BeforeClass
     public static void init() {
