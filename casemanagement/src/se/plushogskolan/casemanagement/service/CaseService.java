@@ -83,7 +83,7 @@ public final class CaseService {
             if (usernameLongEnough(username)) {
                 userRepository.updateUser(updatedUser);
             } else {
-                throw new ServiceException("Username not long enough");
+                throw new ServiceException("Username not long enough. Username was " + username);
             }
 
         } catch (RepositoryException e) {
